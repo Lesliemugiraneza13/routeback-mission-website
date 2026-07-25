@@ -1,0 +1,323 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RouteBack | Plan Journey</title>
+<meta name="description" content="Build a Route 95 journey with dependent stop, timing and traffic selections, see stops, connections and ALCHE guidance, and save it to your device.">
+<!-- <link rel="icon" type="image/svg+xml" href="images/logo/favicon.svg"> -->
+<link rel="icon" type="image/jpeg" sizes="32x32" href="images/logo/favicon-32.jpg">
+<!-- <link rel="apple-touch-icon" href="images/logo/apple-touch-icon.jpg"> -->
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared/css/main.css">
+</head>
+<body data-page="planner">
+<a class="skip-link" href="#main">Skip to content</a>
+<header id="site-header" class="site-header"></header> <!-- Done by shared/js/partials.js( search site-header) -->
+
+<main id="main">
+  <!--  HERO/ INTRO Section  -->
+  <section class="section section--tight pattern-wash" style="position:relative;overflow:hidden;">
+    <div class="pattern-layer" aria-hidden="true"></div>
+    <div class="pattern-transit" aria-hidden="true" style="position:absolute;inset:0;z-index:0;"></div>
+    <div class="container" style="position:relative;z-index:1;">
+      <div class="grid-2" style="align-items:center;gap:var(--space-8);">
+        <div>
+          <p class="eyebrow"><span lang="en" data-i18n>Plan Journey</span><span lang="fr" data-i18n>Planifier un trajet</span></p>
+          <h1><span lang="en" data-i18n>Build your <em class="accent">Route 95</em> journey</span><span lang="fr" data-i18n>Construisez votre trajet sur la <em class="accent">ligne 95</em></span></h1>
+          <p style="max-width:60ch;">
+            <span lang="en" data-i18n>Choose your stops, pick Leave around or Arrive by, and RouteBack works out the stop-specific boarding time, an automatic delay estimate, the stop list, possible connections and ALCHE guidance for that trip.</span>
+            <span lang="fr" data-i18n>Choisissez vos arrêts, sélectionnez Partir vers ou Arriver avant, et RouteBack calcule l’heure d’embarquement spécifique à l’arrêt, une estimation automatique du retard, la liste des arrêts, les correspondances possibles et le repère ALCHE.</span>
+          </p>
+        </div>
+        <div class="feature-image-frame" style="aspect-ratio:16/11;">
+          <span class="feature-marker" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"/><path d="M12 7v5l3 3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          </span>
+          <img class="img-cover" src="images/hero/map-reading-bus-stop.jpg" alt="Two students reading a printed route map at a bus stop signposted Bus Stop / Arrêt d’autobus.">
+          <span class="feature-image-caption"><span lang="en" data-i18n>Planning a Route 95 journey</span><span lang="fr" data-i18n>Planifier un trajet sur la ligne 95</span></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!--  PLANNER FORM + MISSING ROUTE  -->
+  <section class="section section--tight" id="planner-form-section">
+    <div class="container">
+      <div class="grid-2" style="grid-template-columns:2fr 1fr;align-items:start;gap:var(--space-6);">
+      <form id="planner-form" class="card" novalidate aria-describedby="planner-form-hint">
+        <p id="planner-form-hint" class="field-hint" style="margin-top:0;margin-bottom:var(--space-5);">
+          <span lang="en" data-i18n>Type in a stop field to search every stop in Northern Mauritius, not just one area.</span>
+          <span lang="fr" data-i18n>Saisissez dans un champ d’arrêt pour rechercher tous les arrêts du Nord de Maurice, pas seulement une zone.</span>
+        </p>
+        <fieldset class="form-fieldset">
+          <legend><span lang="en" data-i18n>Where are you starting?</span><span lang="fr" data-i18n>D’où partez-vous ?</span></legend>
+          <div class="field-row field-row-2">
+            <div class="field">
+              <label for="pl-start"><span lang="en" data-i18n>Starting area</span><span lang="fr" data-i18n>Zone de départ</span></label>
+              <select id="pl-start" required></select>
+            </div>
+            <div class="field">
+              <label for="pl-start-stop"><span lang="en" data-i18n>Starting stop</span><span lang="fr" data-i18n>Arrêt de départ</span></label>
+              <select id="pl-start-stop"></select>
+              <p class="field-hint"><span lang="en" data-i18n>Search the full Northern Mauritius stop catalogue, not just this area.</span><span lang="fr" data-i18n>Recherchez dans le catalogue complet des arrêts du Nord de Maurice, pas seulement cette zone.</span></p>
+            </div>
+          </div>
+        </fieldset>
+        <fieldset class="form-fieldset">
+          <legend><span lang="en" data-i18n>Where are you going?</span><span lang="fr" data-i18n>Où allez-vous ?</span></legend>
+          <div class="field-row field-row-2">
+            <div class="field">
+              <label for="pl-dest"><span lang="en" data-i18n>Destination area</span><span lang="fr" data-i18n>Zone de destination</span></label>
+              <select id="pl-dest" required></select>
+            </div>
+            <div class="field">
+              <label for="pl-dest-stop"><span lang="en" data-i18n>Destination stop</span><span lang="fr" data-i18n>Arrêt de destination</span></label>
+              <select id="pl-dest-stop"></select>
+              <p class="field-hint"><span lang="en" data-i18n>Search the full Northern Mauritius stop catalogue, not just this area.</span><span lang="fr" data-i18n>Recherchez dans le catalogue complet des arrêts du Nord de Maurice, pas seulement cette zone.</span></p>
+            </div>
+          </div>
+        </fieldset>
+        <fieldset class="form-fieldset">
+          <legend><span lang="en" data-i18n>When are you travelling?</span><span lang="fr" data-i18n>Quand voyagez-vous ?</span></legend>
+          <div class="field-row field-row-2">
+            <div class="field">
+              <label for="pl-day"><span lang="en" data-i18n>Travel day</span><span lang="fr" data-i18n>Jour de voyage</span></label>
+              <select id="pl-day"></select>
+            </div>
+            <div class="field">
+              <label for="pl-mode"><span lang="en" data-i18n>Journey mode</span><span lang="fr" data-i18n>Mode de trajet</span></label>
+              <select id="pl-mode"></select>
+            </div>
+          </div>
+          <div class="field">
+            <label for="pl-time" id="pl-time-label"><span lang="en" data-i18n>Leave around</span><span lang="fr" data-i18n>Partir vers</span></label>
+            <select id="pl-time"></select>
+          </div>
+        </fieldset>
+        <fieldset class="form-fieldset">
+          <legend><span lang="en" data-i18n>Passenger details</span><span lang="fr" data-i18n>Détails du passager</span></legend>
+          <div class="field-row field-row-2">
+            <div class="field">
+              <label for="pl-passenger"><span lang="en" data-i18n>Passenger type</span><span lang="fr" data-i18n>Type de passager</span></label>
+              <select id="pl-passenger"></select>
+            </div>
+            <div class="field">
+              <label for="pl-buspass"><span lang="en" data-i18n>Bus-pass status</span><span lang="fr" data-i18n>Statut de carte de bus</span></label>
+              <select id="pl-buspass"></select>
+            </div>
+          </div>
+        </fieldset>
+        <p class="field-error" id="planner-form-error" role="alert" style="display:none;">
+          <span lang="en" data-i18n>Please choose a starting area and a different destination.</span>
+          <span lang="fr" data-i18n>Veuillez choisir une zone de départ et une destination différente.</span>
+        </p>
+        <div class="notice notice-warning" id="planner-off-corridor-notice" role="alert" style="display:none;margin-bottom:var(--space-4);">
+          <svg class="notice-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 9v4M12 17h.01M10.3 3.9L2.7 17a2 2 0 001.7 3h15.2a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z" stroke="currentColor" stroke-width="1.8"/></svg>
+          <span id="planner-off-corridor-notice-text"></span>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">
+          <span lang="en" data-i18n>Find my options</span><span lang="fr" data-i18n>Trouver mes options</span>
+        </button>
+      </form>
+
+      <aside class="card" aria-labelledby="missing-route-heading">
+        <h3 id="missing-route-heading"><span lang="en" data-i18n>Can’t find the route you need?</span><span lang="fr" data-i18n>Vous ne trouvez pas la ligne dont vous avez besoin ?</span></h3>
+        <p><span lang="en" data-i18n>Tell the RouteBack team which journey is missing so it can be reviewed for future updates.</span><span lang="fr" data-i18n>Indiquez à l’équipe RouteBack quel trajet manque afin qu’il soit examiné pour de futures mises à jour.</span></p>
+        <a class="btn btn-secondary btn-block" href="contact.html?category=missing-route">
+          <span lang="en" data-i18n>Suggest a missing route</span><span lang="fr" data-i18n>Suggérer une ligne manquante</span>
+        </a>
+        <div id="missing-route-form-link" style="margin-top:var(--space-3);"></div>
+      </aside>
+      </div>
+    </div>
+  </section>
+
+  <!--  RESULTS  -->
+  <section class="section section--tight" id="planner-results" hidden>
+    <div class="container">
+      <div class="card result-card" id="result-card-body"></div>
+    </div>
+  </section>
+
+  <!--  ROUTE 95 OVERVIEW  -->
+  <section class="section" id="route-95">
+    <div class="container">
+      <div class="section-head">
+        <p class="eyebrow">Route 95</p>
+        <h2><span lang="en" data-i18n>TBS, Pamplemousses ↔ Saint Antoine Traffic Centre</span><span lang="fr" data-i18n>TBS, Pamplemousses ↔ Traffic Centre de Saint Antoine</span></h2>
+        <p><span lang="en" data-i18n>Operates Monday to Sunday. Timetable figures below come from a published secondary reference and are not live.</span><span lang="fr" data-i18n>Circule du lundi au dimanche. Les horaires ci-dessous proviennent d’une référence publiée en second lieu et ne sont pas en direct.</span></p>
+      </div>
+
+      <div class="grid-3" style="margin-bottom:var(--space-6);">
+        <div class="card">
+          <h4><span lang="en" data-i18n>Pamplemousses → Saint Antoine</span><span lang="fr" data-i18n>Pamplemousses → Saint Antoine</span></h4>
+          <p class="field-hint" style="margin-top:0;"><span lang="en" data-i18n>First bus</span><span lang="fr" data-i18n>Premier bus</span>: <strong>06:05</strong> · <span lang="en" data-i18n>Last bus</span><span lang="fr" data-i18n>Dernier bus</span>: <strong>16:55</strong></p>
+          <p><span lang="en" data-i18n>Approximate duration: 95 minutes.</span><span lang="fr" data-i18n>Durée approximative : 95 minutes.</span></p>
+        </div>
+        <div class="card">
+          <h4><span lang="en" data-i18n>Saint Antoine → Pamplemousses</span><span lang="fr" data-i18n>Saint Antoine → Pamplemousses</span></h4>
+          <p class="field-hint" style="margin-top:0;"><span lang="en" data-i18n>First bus</span><span lang="fr" data-i18n>Premier bus</span>: <strong>06:05</strong></p>
+          <p style="margin-bottom:4px;"><span lang="en" data-i18n>Last bus, Mon-Sat:</span><span lang="fr" data-i18n>Dernier bus, lun.-sam. :</span> <strong>16:10</strong></p>
+          <p><span lang="en" data-i18n>Last bus, Sun / public holiday:</span><span lang="fr" data-i18n>Dernier bus, dim. / jour férié :</span> <strong>17:45</strong></p>
+        </div>
+        <div class="card">
+          <h4><span lang="en" data-i18n>How the delay estimate works</span><span lang="fr" data-i18n>Comment l’estimation du retard fonctionne</span></h4>
+          <p class="field-hint" style="margin-top:0;">
+            <span lang="en" data-i18n>RouteBack no longer asks you to guess Quiet, Normal or Busy. It works out a Low, Moderate or High band automatically from your day, time and stops.</span>
+            <span lang="fr" data-i18n>RouteBack ne vous demande plus de deviner Calme, Normal ou Chargé. Il calcule automatiquement une bande Faible, Modérée ou Élevée selon votre jour, votre heure et vos arrêts.</span>
+          </p>
+          <div class="accordion-item" style="margin-bottom:0;">
+            <button type="button" class="accordion-trigger" aria-expanded="false" aria-controls="delay-explainer-panel">
+              <span lang="en" data-i18n>How this estimate was calculated</span><span lang="fr" data-i18n>Comment cette estimation a été calculée</span>
+              <svg class="chev" width="16" height="10" viewBox="0 0 16 10" fill="none" aria-hidden="true"><path d="M1 1l7 7 7-7" stroke="currentColor" stroke-width="2" fill="none"/></svg>
+            </button>
+            <div class="accordion-panel" id="delay-explainer-panel" hidden>
+              <p><span lang="en" data-i18n>Weekday commute peaks (07:00-09:00 and 16:00-18:30) score High. School and coastal-weekend periods add a step. Routes with many intermediate stops add a further step.</span><span lang="fr" data-i18n>Les pointes de trajet en semaine (07h00-09h00 et 16h00-18h30) obtiennent Élevé. Les périodes scolaires et de week-end côtier ajoutent un niveau. Les lignes à nombreux arrêts intermédiaires ajoutent un niveau supplémentaire.</span></p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid-2" style="margin-bottom:var(--space-6);">
+        <div class="card">
+          <h3><span lang="en" data-i18n>Stops, Pamplemousses → Saint Antoine</span><span lang="fr" data-i18n>Arrêts, Pamplemousses → Saint Antoine</span></h3>
+          <p class="field-hint"><span lang="en" data-i18n>Team-sequenced from observed stop order, not a verified GPS survey.</span><span lang="fr" data-i18n>Séquencés par l’équipe à partir de l’ordre observé, pas un relevé GPS vérifié.</span></p>
+          <ol class="stop-list" id="route95-stop-list" style="list-style:none;padding-left:0;"></ol>
+        </div>
+        <div class="card">
+          <h3><span lang="en" data-i18n>Fares checked 21 July 2026</span><span lang="fr" data-i18n>Tarifs vérifiés le 21 juillet 2026</span></h3>
+          <div class="table-scroll"><table class="data-table">
+            <thead><tr>
+              <th><span lang="en" data-i18n>Trip</span><span lang="fr" data-i18n>Trajet</span></th>
+              <th><span lang="en" data-i18n>Regular</span><span lang="fr" data-i18n>Régulier</span></th>
+              <th><span lang="en" data-i18n>Student</span><span lang="fr" data-i18n>Étudiant</span></th>
+            </tr></thead>
+            <tbody>
+              <tr><td>Grand Baie ↔ Pamplemousses</td><td>Rs 40</td><td>Rs 20</td></tr>
+              <tr><td>Grand Baie ↔ Triolet</td><td>Rs 35</td><td><span class="tag tag-warning"><span lang="en" data-i18n>pending</span><span lang="fr" data-i18n>en attente</span></span></td></tr>
+            </tbody>
+          </table></div>
+          <p class="field-hint"><span lang="en" data-i18n>Team-observed fares. Other pairs on this route are not yet confirmed.</span><span lang="fr" data-i18n>Tarifs observés par l’équipe. Les autres trajets ne sont pas encore confirmés.</span></p>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3><span lang="en" data-i18n>Possible connecting routes</span><span lang="fr" data-i18n>Correspondances possibles</span></h3>
+        <p class="field-hint"><span lang="en" data-i18n>Recorded at major localities. These are possible connections, not guaranteed transfers.</span><span lang="fr" data-i18n>Recensées aux principales localités. Ce sont des correspondances possibles, pas des correspondances garanties.</span></p>
+        <div id="connections-accordion"></div>
+      </div>
+    </div>
+  </section>
+
+  <!--  NORTHERN JOURNEY GUIDE  -->
+  <section class="section section-wash-lavender" id="northern-guide" style="position:relative;overflow:hidden;">
+    <div class="pattern-routes" aria-hidden="true" style="position:absolute;inset:0;z-index:0;"></div>
+    <div class="container" style="position:relative;z-index:1;">
+      <div class="section-head">
+        <p class="eyebrow"><span lang="en" data-i18n>Beyond Route 95</span><span lang="fr" data-i18n>Au-delà de la ligne 95</span></p>
+        <h2><span lang="en" data-i18n>Northern Journey Guide</span><span lang="fr" data-i18n>Guide de trajet du Nord</span></h2>
+        <p>
+          <span lang="en" data-i18n>Route, duration and fare ranges for other Northern Mauritius destinations, compiled from a planning reference rather than team-observed on the ground.</span>
+          <span lang="fr" data-i18n>Plages de ligne, de durée et de tarif pour d’autres destinations du Nord de Maurice, compilées à partir d’une référence de planification plutôt qu’observées sur le terrain par l’équipe.</span>
+        </p>
+        <span class="guide-source-tag">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 9v4M12 17h.01M10.3 3.9L2.7 17a2 2 0 001.7 3h15.2a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z" stroke="currentColor" stroke-width="1.8"/></svg>
+          <span lang="en" data-i18n>Compiled planning guide, confirm before travelling</span><span lang="fr" data-i18n>Guide de planification compilé, confirmez avant de voyager</span>
+        </span>
+      </div>
+
+      <!-- Fare ticket highlight row -->
+      <div class="grid-3" id="guide-fare-tickets" style="margin-bottom:var(--space-7);"></div>
+
+      <!-- Destination explorer -->
+      <div class="card reveal">
+        <h3><span lang="en" data-i18n>Explore a Northern destination</span><span lang="fr" data-i18n>Explorer une destination du Nord</span></h3>
+        <p class="field-hint" style="margin-top:0;"><span lang="en" data-i18n>Select a destination to compare the route from Port Louis (Gare du Nord) and from SSRN Hospital (Pamplemousses).</span><span lang="fr" data-i18n>Sélectionnez une destination pour comparer la ligne depuis Port Louis (Gare du Nord) et depuis l’Hôpital SSRN (Pamplemousses).</span></p>
+        <div class="destination-explorer-chips" id="guide-chips" role="listbox" aria-label="Northern destinations"></div>
+        <div class="destination-detail" id="guide-detail">
+          <h4 id="guide-detail-title"></h4>
+          <div class="destination-detail-grid" id="guide-detail-grid"></div>
+          <div class="cluster gap-3" style="margin-top:var(--space-4);">
+            <a class="btn btn-secondary btn-sm" href="planner.html"><span lang="en" data-i18n>Open Planner</span><span lang="fr" data-i18n>Ouvrir le planificateur</span></a>
+            <a class="btn btn-ghost btn-sm" href="contact.html?category=incorrect-route"><span lang="en" data-i18n>Report an issue with this entry</span><span lang="fr" data-i18n>Signaler un problème avec cette entrée</span></a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Full reference table -->
+      <div class="card guide-table-wrap">
+        <button type="button" class="accordion-trigger" aria-expanded="false" aria-controls="guide-table-panel" style="padding:0 0 var(--space-2);">
+          <span><span lang="en" data-i18n>See the full 26-destination reference table</span><span lang="fr" data-i18n>Voir le tableau de référence complet (26 destinations)</span></span>
+          <svg class="chev" width="16" height="10" viewBox="0 0 16 10" fill="none" aria-hidden="true"><path d="M1 1l7 7 7-7" stroke="currentColor" stroke-width="2" fill="none"/></svg>
+        </button>
+        <div class="accordion-panel" id="guide-table-panel" hidden style="padding:var(--space-4) 0 0;">
+          <div class="table-scroll"><table class="data-table">
+            <thead><tr>
+              <th><span lang="en" data-i18n>Destination</span><span lang="fr" data-i18n>Destination</span></th>
+              <th><span lang="en" data-i18n>From Port Louis</span><span lang="fr" data-i18n>Depuis Port Louis</span></th>
+              <th><span lang="en" data-i18n>From SSRN Hospital</span><span lang="fr" data-i18n>Depuis l’Hôpital SSRN</span></th>
+            </tr></thead>
+            <tbody id="guide-table-body"></tbody>
+          </table></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SAVED ROUTES -->
+  <section class="section section-wash-lavender" id="saved-routes" style="position:relative;overflow:hidden;">
+    <div class="pattern-transit" aria-hidden="true" style="position:absolute;inset:0;z-index:0;"></div>
+    <div class="container" style="position:relative;z-index:1;">
+      <div class="section-head">
+        <div class="cluster gap-3" style="align-items:flex-start;">
+          
+          <div>
+            <h2 style="margin-bottom:var(--space-2);"><span lang="en" data-i18n>Saved Routes</span><span lang="fr" data-i18n>Trajets enregistrés</span></h2>
+            <p><span lang="en" data-i18n>Routes you save are stored only on this device and linked to your local RouteBack profile.</span><span lang="fr" data-i18n>Les trajets enregistrés sont stockés uniquement sur cet appareil et liés à votre profil RouteBack local.</span></p>
+          </div>
+        </div>
+      </div>
+      <div id="saved-routes-list" class="grid-3"></div>
+      <p id="saved-routes-empty" class="notice" style="margin-top:var(--space-4);">
+        <span lang="en" data-i18n>No routes saved yet. Plan a journey above and choose Save route once you see a result.</span>
+        <span lang="fr" data-i18n>Aucun trajet enregistré. Planifiez un trajet ci-dessus puis choisissez Enregistrer une fois le résultat affiché.</span>
+      </p>
+    </div>
+  </section>
+
+  <!--  RECENT SEARCHES  -->
+  <section class="section section--tight" id="recent-searches">
+    <div class="container">
+      <div class="section-head">
+        <div class="cluster gap-3" style="align-items:flex-start;">
+          
+          <div>
+            <h2 style="margin-bottom:var(--space-2);"><span lang="en" data-i18n>Recent Searches</span><span lang="fr" data-i18n>Recherches récentes</span></h2>
+            <p><span lang="en" data-i18n>Kept only for this browser tab session, so you can quickly redo a search.</span><span lang="fr" data-i18n>Conservées uniquement pour cette session d’onglet, pour refaire rapidement une recherche.</span></p>
+          </div>
+        </div>
+      </div>
+      <div id="recent-searches-list" class="cluster gap-3" style="flex-wrap:wrap;"></div>
+      <p id="recent-searches-empty" class="field-hint"><span lang="en" data-i18n>No searches yet this session.</span><span lang="fr" data-i18n>Aucune recherche pour cette session.</span></p>
+    </div>
+  </section>
+</main>
+
+<footer id="site-footer" class="site-footer"></footer>
+
+<script src="shared/js/storage.js" defer></script>
+<script src="shared/js/i18n.js" defer></script>
+<script src="shared/js/theme.js" defer></script>
+<script src="shared/js/ui.js" defer></script>
+<script src="shared/js/validation.js" defer></script>
+<script src="shared/js/data.js" defer></script>
+<script src="shared/js/planner-tools.js" defer></script>
+<script src="shared/js/nav.js" defer></script>
+<script src="assets/js/planner.js" defer></script>
+<script src="shared/js/partials.js" defer></script>
+</body>
+</html>
