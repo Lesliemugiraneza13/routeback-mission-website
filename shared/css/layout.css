@@ -1,0 +1,172 @@
+/* ==========================================================================
+   RouteBack — Layout primitives
+   ========================================================================== */
+
+.container {
+  width: 100%;
+  max-width: var(--container-max);
+  margin-inline: auto;
+  padding-inline: var(--space-6);
+}
+@media (max-width: 640px) {
+  .container { padding-inline: var(--space-4); }
+}
+
+.container--narrow { max-width: var(--container-narrow); }
+.container--form { max-width: var(--container-form); }
+
+main { display: block; }
+
+.section {
+  padding-block: var(--space-9);
+  position: relative;
+}
+.section--tight { padding-block: var(--space-7); }
+@media (max-width: 640px) {
+  .section { padding-block: var(--space-7); }
+  .section--tight { padding-block: var(--space-6); }
+}
+
+.section-head {
+  max-width: 760px;
+  margin-bottom: var(--space-7);
+}
+.section-head--center { margin-inline: auto; text-align: center; }
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: var(--fs-tiny);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--rb-purple-600);
+  margin-bottom: var(--space-3);
+}
+:root[data-theme='dark'] .eyebrow { color: var(--rb-lavender-300); }
+
+/* ---- Header ---- */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  height: var(--header-height);
+  display: flex;
+  align-items: center;
+  background: color-mix(in srgb, var(--surface-canvas) 88%, transparent);
+  backdrop-filter: saturate(160%) blur(10px);
+  border-bottom: 1px solid var(--border-subtle);
+}
+.site-header .container {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: var(--space-5);
+  height: 100%;
+}
+.header-zone--brand { display: flex; align-items: center; }
+.header-zone--nav { display: flex; justify-content: center; }
+.header-zone--utility { display: flex; align-items: center; gap: var(--space-2); justify-self: end; }
+
+@media (max-width: 900px) {
+  .site-header .container { grid-template-columns: auto 1fr auto; }
+  .header-zone--nav { display: none; }
+  /* Mobile utility order is Logo, Language, Theme, Menu — profile/login moves into the menu itself */
+  .header-utility-profile { display: none; }
+}
+
+/* ---- Footer ---- */
+.site-footer {
+  position: relative;
+  background: var(--surface-footer);
+  color: var(--text-on-footer);
+  overflow: hidden;
+  padding-block: var(--space-9) var(--space-6);
+}
+.site-footer a { color: var(--text-on-footer); }
+.site-footer a:hover { color: #fff; }
+/* The footer background is always a fixed dark gradient, independent of the
+   site's light/dark theme, so its headings must always use the footer's own
+   light text colour, never the theme-dependent --text-primary. */
+.site-footer h1, .site-footer h2, .site-footer h3,
+.site-footer h4, .site-footer h5 { color: var(--text-on-footer); }
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr 1fr 1fr 1fr;
+  gap: var(--space-7);
+  position: relative;
+  z-index: 1;
+}
+@media (max-width: 980px) {
+  .footer-grid { grid-template-columns: repeat(2, 1fr); }
+  .footer-brand-block { grid-column: 1 / -1; }
+}
+@media (max-width: 560px) {
+  .footer-grid { grid-template-columns: 1fr; }
+}
+
+.footer-bottom {
+  position: relative;
+  z-index: 1;
+  margin-top: var(--space-8);
+  padding-top: var(--space-5);
+  border-top: 1px solid var(--border-on-footer);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3) var(--space-6);
+  align-items: center;
+  justify-content: space-between;
+  font-size: var(--fs-tiny);
+  color: var(--text-on-footer-muted);
+}
+.footer-bottom-links { display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-5); }
+
+/* ---- Bento grid ---- */
+.bento {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: var(--space-5);
+}
+.bento > * { grid-column: span 6; }
+.bento-side-stack { display: flex; flex-direction: column; gap: var(--space-5); }
+
+@media (min-width: 860px) {
+  .bento-anchor { grid-column: span 4; }
+  .bento-side-stack { grid-column: span 2; }
+  .bento-medium { grid-column: span 3; }
+  .bento-small { grid-column: span 2; }
+  .bento-wide { grid-column: span 6; }
+}
+
+.grid-2 { display: grid; grid-template-columns: 1fr; gap: var(--space-5); }
+.grid-3 { display: grid; grid-template-columns: 1fr; gap: var(--space-5); }
+@media (min-width: 720px) {
+  .grid-2 { grid-template-columns: 1fr 1fr; }
+  .grid-3 { grid-template-columns: repeat(3, 1fr); }
+}
+
+/* Grid items default to min-width:auto, which lets wide content (long headings,
+   tables) force the whole track — and the page — wider than the viewport.
+   Letting items shrink below their content's intrinsic size fixes that. */
+.grid-2 > *, .grid-3 > *, .bento > *, .timeline-grid > *, .footer-grid > * {
+  min-width: 0;
+}
+
+.stack { display: flex; flex-direction: column; }
+.cluster { display: flex; flex-wrap: wrap; align-items: center; }
+
+/* Timeline (Mission page) */
+.timeline-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-5);
+}
+@media (min-width: 760px) {
+  .timeline-grid { grid-template-columns: repeat(4, 1fr); }
+}
+@media (min-width: 1080px) {
+  .timeline-grid { grid-template-columns: repeat(7, 1fr); }
+}

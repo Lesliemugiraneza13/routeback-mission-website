@@ -1,0 +1,196 @@
+/* ==========================================================================
+   RouteBack — Design tokens
+   ========================================================================== */
+
+:root {
+  /* Brand purples */
+  --rb-purple-900: #2C1466;
+  --rb-purple-800: #3B1E86;
+  --rb-purple-700: #4A26A6;
+  --rb-purple-600: #5B2FE0;
+  --rb-purple-500: #7B4EF0;
+  --rb-purple-400: #9B75F5;
+  --rb-lavender-300: #C9B8FF;
+  --rb-lavender-200: #E1D6FF;
+  --rb-lavender-100: #F0EAFF;
+
+  /* Neutrals */
+  --rb-ink-900: #1B1730;
+  --rb-charcoal-700: #423F52;
+  --rb-charcoal-500: #6B6779;
+  --rb-grey-300: #C7C3D1;
+  --rb-grey-200: #E3E0EA;
+  --rb-grey-100: #EFEDF4;
+  --rb-cream: #FBF8F3;
+  --rb-warm-white: #FDFCFA;
+  --rb-white: #FFFFFF;
+
+  /* Status */
+  --rb-success-700: #1D7A46;
+  --rb-success-500: #2E9D5B;
+  --rb-success-100: #E4F5EB;
+  --rb-info-700: #1F5FA8;
+  --rb-info-500: #2E7BD1;
+  --rb-info-100: #E6F1FC;
+  --rb-warning-700: #B5620A;
+  --rb-warning-500: #E08A2B;
+  --rb-warning-100: #FCEEDE;
+  --rb-error-700: #B3261E;
+  --rb-error-500: #D8433A;
+  --rb-error-100: #FBE7E5;
+
+  /* Semantic — light theme (default) */
+  --surface-canvas: var(--rb-warm-white);
+  --surface-page: linear-gradient(180deg, #F6F2FC 0%, #FDFCFA 38%);
+  --surface-card: var(--rb-white);
+  --surface-card-alt: var(--rb-lavender-100);
+  --surface-sunken: var(--rb-grey-100);
+  --surface-inverse: var(--rb-ink-900);
+  --surface-tile: var(--rb-cream);
+  --surface-footer: linear-gradient(160deg, #241154 0%, #150B33 65%, #0F0824 100%);
+
+  --text-primary: var(--rb-ink-900);
+  --text-secondary: var(--rb-charcoal-700);
+  --text-muted: var(--rb-charcoal-500);
+  --text-on-brand: var(--rb-white);
+  --text-on-footer: #E7E2F5;
+  --text-on-footer-muted: #B3A9D6;
+  --text-link: var(--rb-purple-600);
+
+  --border-subtle: var(--rb-grey-200);
+  --border-default: var(--rb-grey-300);
+  --border-brand: var(--rb-lavender-300);
+  --border-on-footer: rgba(231, 226, 245, 0.16);
+
+  --brand-solid: var(--rb-purple-600);
+  --brand-solid-hover: var(--rb-purple-700);
+  --brand-solid-active: var(--rb-purple-800);
+  --brand-soft: var(--rb-lavender-100);
+  --brand-soft-hover: var(--rb-lavender-200);
+
+  --focus-ring: #2E7BD1;
+  --shadow-color: 250deg 60% 30%;
+  --shadow-sm: 0 1px 2px hsl(var(--shadow-color) / 0.08), 0 1px 1px hsl(var(--shadow-color) / 0.06);
+  --shadow-md: 0 6px 16px hsl(var(--shadow-color) / 0.10), 0 2px 6px hsl(var(--shadow-color) / 0.06);
+  --shadow-lg: 0 16px 36px hsl(var(--shadow-color) / 0.14), 0 4px 12px hsl(var(--shadow-color) / 0.08);
+
+  /* Type */
+  --font-display: 'Cormorant Garamond', 'Georgia', serif;
+  --font-body: 'Work Sans', 'Segoe UI', Arial, sans-serif;
+
+  --fs-body: 1rem;
+  --fs-small: 0.9375rem;
+  --fs-tiny: 0.8125rem;
+  --fs-h5: 1.15rem;
+  --fs-h4: 1.4rem;
+  --fs-h3: 1.85rem;
+  --fs-h2: 2.35rem;
+  --fs-h1: 3rem;
+  --fs-hero: 3.4rem;
+  --lh-body: 1.6;
+  --lh-tight: 1.25;
+
+  /* Spacing scale */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 2.5rem;
+  --space-8: 3rem;
+  --space-9: 4rem;
+  --space-10: 5.5rem;
+
+  /* Radius */
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-pill: 999px;
+
+  /* Motion */
+  --ease-standard: cubic-bezier(0.2, 0.7, 0.3, 1);
+  --dur-fast: 120ms;
+  --dur-base: 180ms;
+  --dur-slow: 240ms;
+
+  /* Layout */
+  --header-height: 78px;
+  --container-max: 1240px;
+  --container-narrow: 820px;
+  --container-form: 720px;
+}
+
+:root[data-theme='dark'] {
+  --surface-canvas: #16112C;
+  --surface-page: linear-gradient(180deg, #1B1638 0%, #16112C 45%);
+  --surface-card: #201A3D;
+  --surface-card-alt: #251F47;
+  --surface-sunken: #1C1734;
+  --surface-inverse: #F4F1FB;
+  --surface-tile: #2A2350;
+  --surface-footer: linear-gradient(160deg, #150B33 0%, #0D0720 70%, #08051A 100%);
+
+  --text-primary: #F1EEFA;
+  --text-secondary: #CBC4E6;
+  --text-muted: #9A91C2;
+  --text-on-brand: var(--rb-white);
+  --text-on-footer: #E7E2F5;
+  --text-on-footer-muted: #B3A9D6;
+  --text-link: #B79CFF;
+
+  --border-subtle: #322A5B;
+  --border-default: #3D3468;
+  --border-brand: #4E3F86;
+  --border-on-footer: rgba(231, 226, 245, 0.14);
+
+  --brand-solid: #8465F2;
+  --brand-solid-hover: #9578F5;
+  --brand-solid-active: #A588F7;
+  --brand-soft: #2A2350;
+  --brand-soft-hover: #332A63;
+
+  --rb-success-100: #163325;
+  --rb-info-100: #142A3E;
+  --rb-warning-100: #3A2712;
+  --rb-error-100: #3A1917;
+
+  --shadow-color: 255deg 60% 4%;
+  --shadow-sm: 0 1px 2px hsl(var(--shadow-color) / 0.4);
+  --shadow-md: 0 6px 16px hsl(var(--shadow-color) / 0.45);
+  --shadow-lg: 0 16px 36px hsl(var(--shadow-color) / 0.5);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --surface-canvas: #16112C;
+    --surface-page: linear-gradient(180deg, #1B1638 0%, #16112C 45%);
+    --surface-card: #201A3D;
+    --surface-card-alt: #251F47;
+    --surface-sunken: #1C1734;
+    --surface-inverse: #F4F1FB;
+    --surface-tile: #2A2350;
+    --surface-footer: linear-gradient(160deg, #150B33 0%, #0D0720 70%, #08051A 100%);
+
+    --text-primary: #F1EEFA;
+    --text-secondary: #CBC4E6;
+    --text-muted: #9A91C2;
+    --text-on-brand: var(--rb-white);
+    --text-link: #B79CFF;
+
+    --border-subtle: #322A5B;
+    --border-default: #3D3468;
+    --border-brand: #4E3F86;
+
+    --brand-solid: #8465F2;
+    --brand-solid-hover: #9578F5;
+    --brand-solid-active: #A588F7;
+    --brand-soft: #2A2350;
+    --brand-soft-hover: #332A63;
+
+    --rb-success-100: #163325;
+    --rb-info-100: #142A3E;
+    --rb-warning-100: #3A2712;
+    --rb-error-100: #3A1917;
+  }
+}

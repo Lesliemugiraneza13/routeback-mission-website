@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 110" role="img" aria-labelledby="t">
+  <title id="t">My PRORIDE</title>
+  <rect width="220" height="110" fill="#FFFFFF"/>
+  <text x="110" y="50" font-family="'Work Sans', Arial, sans-serif" font-size="15" font-weight="600" fill="#1F4FA3" text-anchor="middle">My</text>
+  <text x="110" y="78" font-family="'Work Sans', Arial, sans-serif" font-size="26" font-weight="800" letter-spacing="1" fill="#1F4FA3" text-anchor="middle">PRORIDE</text>
+</svg>

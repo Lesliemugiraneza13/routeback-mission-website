@@ -1,0 +1,86 @@
+/* ==========================================================================
+   RouteBack — Decorative patterns (route lines, stop dots, grid traces)
+   All patterns are aria-hidden / background-only and respect reduced motion.
+   ========================================================================== */
+
+.pattern-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+/* Soft radial wash used behind hero/CTA sections */
+.pattern-wash { overflow: hidden; }
+.pattern-wash::before {
+  content: '';
+  position: absolute;
+  inset: -10%;
+  background:
+    radial-gradient(60% 50% at 82% 8%, color-mix(in srgb, var(--rb-lavender-200) 65%, transparent) 0%, transparent 65%),
+    radial-gradient(45% 40% at 6% 92%, color-mix(in srgb, var(--rb-purple-400) 22%, transparent) 0%, transparent 70%);
+  z-index: 0;
+}
+
+/* Route-line trace, layered SVG, low opacity */
+.pattern-routes {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='400' viewBox='0 0 600 400'%3E%3Cg fill='none' stroke='%235B2FE0' stroke-width='1.4' stroke-linecap='round' opacity='0.12'%3E%3Cpath d='M-20 340 C 120 300, 160 380, 260 320 S 420 200, 520 260 S 620 160, 700 180'/%3E%3Cpath d='M-30 120 C 80 160, 140 60, 260 110 S 400 220, 520 140 S 640 60, 700 90' stroke-dasharray='2 10'/%3E%3Ccircle cx='260' cy='110' r='4' fill='%235B2FE0' stroke='none'/%3E%3Ccircle cx='260' cy='320' r='4' fill='%235B2FE0' stroke='none'/%3E%3Ccircle cx='520' cy='140' r='4' fill='%235B2FE0' stroke='none'/%3E%3C/g%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 600px 400px;
+  opacity: 0.7;
+}
+:root[data-theme='dark'] .pattern-routes { opacity: 0.35; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) .pattern-routes { opacity: 0.35; }
+}
+
+/* Stop-dot motif for small utility cards */
+.pattern-dots {
+  background-image: radial-gradient(color-mix(in srgb, var(--rb-purple-500) 35%, transparent) 1.6px, transparent 1.6px);
+  background-size: 16px 16px;
+  opacity: 0.5;
+}
+
+/* Footer pattern: route lines + stop markers + faint grid, in light ink */
+.footer-pattern {
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='900' height='500' viewBox='0 0 900 500'%3E%3Cg fill='none' stroke='%23E7E2F5' stroke-width='1.2' opacity='0.10'%3E%3Cpath d='M-40 420 C 140 380, 200 460, 340 400 S 560 260, 720 340 S 900 220, 980 260'/%3E%3Cpath d='M-40 120 C 120 180, 220 40, 380 120 S 600 260, 760 140 S 900 60, 980 100' stroke-dasharray='2 12'/%3E%3Cpath d='M-40 260 L 980 260' stroke-dasharray='1 16' opacity='0.5'/%3E%3Ccircle cx='340' cy='400' r='4.5' fill='%23F2C744' stroke='none'/%3E%3Ccircle cx='380' cy='120' r='4.5' fill='%23F2C744' stroke='none'/%3E%3Ccircle cx='720' cy='340' r='4.5' fill='%23F2C744' stroke='none'/%3E%3Ccircle cx='600' cy='260' r='3.5' fill='%23FFFFFF' stroke='none' opacity='0.6'/%3E%3C/g%3E%3C/svg%3E"),
+    radial-gradient(1.5px 1.5px at 20px 20px, rgba(231,226,245,0.08) 1.5px, transparent 1.5px);
+  background-size: 900px 500px, 40px 40px;
+  background-repeat: repeat, repeat;
+}
+
+/* Photographic route-wash texture, used sparingly as a section backdrop */
+.pattern-photo-wash {
+  background-image: linear-gradient(180deg, color-mix(in srgb, var(--surface-canvas) 82%, transparent) 0%, var(--surface-canvas) 92%), url('../../images/patterns/route-wash.jpg');
+  background-size: cover;
+  background-position: center;
+}
+
+/* Bus-stop / pin motif accent, used sparingly on empty states */
+.pattern-pin-accent {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Cg fill='none' stroke='%235B2FE0' stroke-width='2' opacity='0.14'%3E%3Cpath d='M60 20c14 0 24 10 24 24 0 18-24 46-24 46S36 62 36 44c0-14 10-24 24-24z'/%3E%3Ccircle cx='60' cy='44' r='8'/%3E%3C/g%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right -10px top -10px;
+  background-size: 140px 140px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .pattern-transition { transition: opacity var(--dur-slow) var(--ease-standard); }
+}
+
+/* Transit motif: interconnected route lines with small bus glyphs riding them,
+   used as a quiet full-page backdrop texture. Apply to an absolutely-positioned
+   overlay element (never directly to a content element, since it carries its
+   own opacity), same convention as .pattern-routes. */
+.pattern-transit {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='640' height='420' viewBox='0 0 640 420'%3E%3Cg fill='none' stroke='%235B2FE0' stroke-width='1.4' stroke-linecap='round'%3E%3Cpath d='M-20 360 C 120 320, 160 400, 260 340 S 420 220, 520 280 S 640 180, 720 200'/%3E%3Cpath d='M-30 140 C 80 180, 140 80, 260 130 S 420 240, 520 160 S 640 80, 720 110' stroke-dasharray='2 10'/%3E%3C/g%3E%3Cg fill='%235B2FE0' stroke='none'%3E%3Ccircle cx='260' cy='340' r='4'/%3E%3Ccircle cx='520' cy='280' r='4'/%3E%3Ccircle cx='260' cy='130' r='4'/%3E%3Ccircle cx='520' cy='160' r='4'/%3E%3C/g%3E%3Cg stroke='%235B2FE0' stroke-width='1.5' fill='none'%3E%3Cg transform='translate(180,240) rotate(-4)'%3E%3Crect x='-18' y='-9' width='36' height='16' rx='3'/%3E%3Crect x='-14' y='-5' width='7' height='6' rx='1'/%3E%3Crect x='-5' y='-5' width='7' height='6' rx='1'/%3E%3Crect x='4' y='-5' width='7' height='6' rx='1'/%3E%3Crect x='13' y='-5' width='4' height='6' rx='1'/%3E%3Cline x1='-18' y1='4' x2='18' y2='4'/%3E%3C/g%3E%3Ccircle cx='171' cy='249' r='3' fill='%235B2FE0' stroke='none'/%3E%3Ccircle cx='189' cy='249' r='3' fill='%235B2FE0' stroke='none'/%3E%3Cg transform='translate(440,90) rotate(5)'%3E%3Crect x='-18' y='-9' width='36' height='16' rx='3'/%3E%3Crect x='-14' y='-5' width='7' height='6' rx='1'/%3E%3Crect x='-5' y='-5' width='7' height='6' rx='1'/%3E%3Crect x='4' y='-5' width='7' height='6' rx='1'/%3E%3Crect x='13' y='-5' width='4' height='6' rx='1'/%3E%3Cline x1='-18' y1='4' x2='18' y2='4'/%3E%3C/g%3E%3Ccircle cx='431' cy='99' r='3' fill='%235B2FE0' stroke='none'/%3E%3Ccircle cx='449' cy='99' r='3' fill='%235B2FE0' stroke='none'/%3E%3C/g%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 640px 420px;
+  opacity: 0.55;
+}
+:root[data-theme='dark'] .pattern-transit { opacity: 0.3; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) .pattern-transit { opacity: 0.3; }
+}
