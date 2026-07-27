@@ -1,61 +1,86 @@
-/**
- * RouteBack, shared planner building-blocks, loaded wherever a page needs
- * them (Home, Plan Journey, Create Profile, My Profile): the dropdown-fill
- * helpers and result-formatting functions used by both the Home quick
- * planner and the full Plan Journey page (this is their "one shared data
- * source"), plus the searchable stop combobox widget every "starting area"
- * field on the site is built from.
- */
-
+// RouteBack: shared planner helpers: fills dropdowns, formats fares,
+// and builds the searchable stop combobox. Used on Home + Plan Journey.
+ 
+// Dropdown data: id = what the code uses, en/fr = what's shown on screen.
 const RB_DAY_TYPES = [
   { id: 'weekday', en: 'Weekday (Mon-Fri)', fr: 'Semaine (lun.-ven.)' },
   { id: 'saturday', en: 'Saturday', fr: 'Samedi' },
   { id: 'sun-ph', en: 'Sunday or public holiday', fr: 'Dimanche ou jour férié' },
 ];
-
+ 
 const RB_JOURNEY_MODES = [
   { id: 'leave-around', en: 'Leave around', fr: 'Partir vers' },
   { id: 'arrive-by', en: 'Arrive by', fr: 'Arriver avant' },
 ];
-
+ 
 const RB_PASSENGER_TYPES = [
   { id: 'student', en: 'Student (with valid bus pass)', fr: 'Étudiant (avec carte de bus valide)' },
   { id: 'regular', en: 'Regular passenger', fr: 'Passager standard' },
 ];
-
+ 
 const RB_BUS_PASS_STATUS = [
   { id: 'yes', en: 'Yes, I have a valid student bus pass', fr: 'Oui, j’ai une carte de bus étudiante valide' },
   { id: 'no', en: 'No, not yet', fr: 'Non, pas encore' },
 ];
-
+ 
+// Every half-hour slot from 05:00 to 20:00, e.g. ["05:00","05:30",...].
 function rbTimeSlots() {
   const slots = [];
   for (let h = 5; h <= 20; h++) {
     for (const m of [0, 30]) {
-      if (h === 20 && m === 30) continue;
+      if (h === 20 && m === 30) continue; // stop at 20:00
       slots.push(`${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`);
     }
   }
   return slots;
 }
-
+ 
+// Current site language ('en' or 'fr'); falls back to English if
+// i18n.js hasn't loaded yet.
 function rbCurrentLang() {
   return (typeof rbGetLang === 'function') ? rbGetLang() : 'en';
 }
-
+ 
+// Empties a <select> so it can be refilled from scratch.
 function rbClearSelect(select) {
   while (select.options.length) select.remove(0);
 }
-
+ 
+// Adds a greyed-out "Choose..." option as the first item in a dropdown.
+function rbAddPlaceholderOption(select, text) {
+  const placeholder = document.createElement('option');
+  placeholder.value = '';
+  placeholder.textContent = text;
+  placeholder.disabled = true;
+  placeholder.selected = true;
+  select.appendChild(placeholder);
+}
+ 
+// Fills a dropdown from one of the lists above(day types, journey modes, etc.). The four functions below
+// All take a <select> element and fill it with the appropriate options, using the current language for the text.
+function rbFillOptionListSelect(select, optionList) {
+  const lang = rbCurrentLang();
+  rbClearSelect(select);
+  optionList.forEach((item) => {
+    const option = document.createElement('option');
+    option.value = item.id;
+    option.textContent = lang === 'fr' ? item.fr : item.en;
+    select.appendChild(option);
+  });
+}
+ 
+function rbFillDayTypeSelect(select) { rbFillOptionListSelect(select, RB_DAY_TYPES); }
+function rbFillJourneyModeSelect(select) { rbFillOptionListSelect(select, RB_JOURNEY_MODES); }
+function rbFillPassengerSelect(select) { rbFillOptionListSelect(select, RB_PASSENGER_TYPES); }
+function rbFillBusPassSelect(select) { rbFillOptionListSelect(select, RB_BUS_PASS_STATUS); }
+ 
+// Fills the "starting area" / "destination area" dropdown from
+// RB_LOCALITIES (in shared/js/data.js). Sorted by .order, not name.
 function rbFillLocalitySelect(select, placeholderEn, placeholderFr) {
   const lang = rbCurrentLang();
   rbClearSelect(select);
-  const ph = document.createElement('option');
-  ph.value = '';
-  ph.textContent = lang === 'fr' ? placeholderFr : placeholderEn;
-  ph.disabled = true;
-  ph.selected = true;
-  select.appendChild(ph);
+  rbAddPlaceholderOption(select, lang === 'fr' ? placeholderFr : placeholderEn);
+ 
   RB_LOCALITIES.slice().sort((a, b) => a.order - b.order).forEach((loc) => {
     const opt = document.createElement('option');
     opt.value = loc.id;
@@ -63,79 +88,37 @@ function rbFillLocalitySelect(select, placeholderEn, placeholderFr) {
     select.appendChild(opt);
   });
 }
-
-function rbFillDayTypeSelect(select) {
-  const lang = rbCurrentLang();
-  rbClearSelect(select);
-  RB_DAY_TYPES.forEach((d) => {
-    const opt = document.createElement('option');
-    opt.value = d.id;
-    opt.textContent = lang === 'fr' ? d.fr : d.en;
-    select.appendChild(opt);
-  });
-}
-
-function rbFillJourneyModeSelect(select) {
-  const lang = rbCurrentLang();
-  rbClearSelect(select);
-  RB_JOURNEY_MODES.forEach((d) => {
-    const opt = document.createElement('option');
-    opt.value = d.id;
-    opt.textContent = lang === 'fr' ? d.fr : d.en;
-    select.appendChild(opt);
-  });
-}
-
-function rbFillPassengerSelect(select) {
-  const lang = rbCurrentLang();
-  rbClearSelect(select);
-  RB_PASSENGER_TYPES.forEach((d) => {
-    const opt = document.createElement('option');
-    opt.value = d.id;
-    opt.textContent = lang === 'fr' ? d.fr : d.en;
-    select.appendChild(opt);
-  });
-}
-
-function rbFillBusPassSelect(select) {
-  const lang = rbCurrentLang();
-  rbClearSelect(select);
-  RB_BUS_PASS_STATUS.forEach((d) => {
-    const opt = document.createElement('option');
-    opt.value = d.id;
-    opt.textContent = lang === 'fr' ? d.fr : d.en;
-    select.appendChild(opt);
-  });
-}
-
+ 
+// Fills the time dropdown. Pass null for both placeholder args if this
+// dropdown shouldn't have a "Choose a time..." option.
 function rbFillTimeSelect(select, placeholderEn, placeholderFr) {
   const lang = rbCurrentLang();
   rbClearSelect(select);
-  if (placeholderEn) {
-    const ph = document.createElement('option');
-    ph.value = '';
-    ph.textContent = lang === 'fr' ? placeholderFr : placeholderEn;
-    ph.disabled = true;
-    ph.selected = true;
-    select.appendChild(ph);
-  }
+  if (placeholderEn) rbAddPlaceholderOption(select, lang === 'fr' ? placeholderFr : placeholderEn);
+ 
   rbTimeSlots().forEach((t) => {
     const opt = document.createElement('option');
-    opt.value = t; opt.textContent = t;
+    opt.value = t;
+    opt.textContent = t;
     select.appendChild(opt);
   });
 }
-
+ 
+// Works out what fare text/colour to show for this passenger type.
 function rbFareDisplay(fare, passengerType, lang) {
   if (!fare) {
+    // No confirmed price yet — say so honestly instead of guessing.
     return lang === 'fr'
       ? { headline: 'Tarif non confirmé pour ce trajet', note: 'Confirmez le tarif actuel auprès du contrôleur avant de voyager.', status: 'warning' }
       : { headline: 'Fare not yet verified for this trip', note: 'Confirm the current fare before travelling.', status: 'warning' };
   }
-  const amount = passengerType === 'student' && fare.student != null ? fare.student : fare.regular;
-  const label = passengerType === 'student' && fare.student != null
+ 
+  const isStudentFare = passengerType === 'student' && fare.student != null;
+  const amount = isStudentFare ? fare.student : fare.regular;
+  const label = isStudentFare
     ? (lang === 'fr' ? 'Tarif étudiant' : 'Student fare')
     : (lang === 'fr' ? 'Tarif régulier' : 'Regular fare');
+ 
   return {
     headline: `${fare.currency} ${amount}, ${label}`,
     note: lang === 'fr' ? fare.note.fr : fare.note.en,
@@ -143,29 +126,22 @@ function rbFareDisplay(fare, passengerType, lang) {
     status: fare.verificationStatus === 'pending' ? 'warning' : 'success',
   };
 }
-
-/* ===== source: shared/js/stop-search.js ===== */
-/**
- * RouteBack, searchable stop combobox.
- * Replaces a plain <select id="X"> with a text-search combobox that keeps
- * the same id on a hidden input, so every existing ".value" read and
- * "change" listener elsewhere in the codebase keeps working unchanged.
- *
- * Search always covers the full Northern Mauritius catalogue. An optional
- * paired "area" select only reorders results (its area shown first), it
- * never removes a valid match from another area.
- */
+// Searchable stop combobox (source: shared/js/stop-search.js)
+// Swaps a plain <select id="X"> for a text-search box, but keeps a
+// hidden input with the same id, so document.getElementById('X').value
+// still works everywhere else exactly like before.
 function rbReplaceSelectWithStopCombobox(selectId, opts) {
   const options = opts || {};
   const select = document.getElementById(selectId);
   if (!select) return null;
-
+ 
+  // Build the pieces: search box, clear button, results list, hidden value.
   const wrapper = document.createElement('div');
   wrapper.className = 'stop-combobox';
-
+ 
   const inputWrap = document.createElement('div');
   inputWrap.className = 'combobox-input-wrap';
-
+ 
   const searchInput = document.createElement('input');
   searchInput.type = 'text';
   searchInput.id = `${selectId}-search`;
@@ -175,47 +151,50 @@ function rbReplaceSelectWithStopCombobox(selectId, opts) {
   searchInput.setAttribute('aria-autocomplete', 'list');
   searchInput.setAttribute('autocomplete', 'off');
   if (select.hasAttribute('required')) searchInput.setAttribute('aria-required', 'true');
-
+ 
   const clearBtn = document.createElement('button');
   clearBtn.type = 'button';
   clearBtn.className = 'combobox-clear';
   clearBtn.setAttribute('aria-label', 'Clear');
   clearBtn.innerHTML = '<svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M1 1l12 12M13 1L1 13" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>';
-
+ 
   const listbox = document.createElement('div');
   listbox.className = 'combobox-listbox';
   listbox.id = `${selectId}-listbox`;
   listbox.setAttribute('role', 'listbox');
   listbox.hidden = true;
-
+ 
+  // Keeps the original select's id, so the rest of the site can't tell
+  // this isn't a real <select> anymore.
   const hidden = document.createElement('input');
   hidden.type = 'hidden';
   hidden.id = selectId;
   hidden.name = select.name || selectId;
-
+ 
   inputWrap.appendChild(searchInput);
   inputWrap.appendChild(clearBtn);
   wrapper.appendChild(inputWrap);
   wrapper.appendChild(listbox);
   wrapper.appendChild(hidden);
-
+ 
   const labelFor = document.querySelector(`label[for="${selectId}"]`);
   if (labelFor) labelFor.setAttribute('for', searchInput.id);
-
+ 
   select.replaceWith(wrapper);
-
-  let activeIndex = -1;
-  let currentOptionEls = [];
-  let currentEntries = [];
-
+ 
+  // State while the person is typing/choosing.
+  let activeIndex = -1;       // which result is keyboard-highlighted
+  let currentOptionEls = [];  // the result <div>s currently on screen
+  let currentEntries = [];    // the stop data behind those <div>s
+ 
   function lang() { return rbCurrentLang(); }
-
+ 
   function statusLabel(status) {
     const l = RB_STOP_STATUS_LABEL[status];
-    if (!l) return '';
-    return lang() === 'fr' ? l.fr : l.en;
+    return l ? (lang() === 'fr' ? l.fr : l.en) : '';
   }
-
+ 
+  // If paired with an area dropdown, that area's stops are shown first.
   function preferredAreaName() {
     if (!options.areaFieldId) return null;
     const areaEl = document.getElementById(options.areaFieldId);
@@ -223,14 +202,16 @@ function rbReplaceSelectWithStopCombobox(selectId, opts) {
     const loc = (typeof rbLocalityById === 'function') ? rbLocalityById(areaEl.value) : null;
     return loc ? loc.name : null;
   }
-
+ 
+  // Stores the chosen stop and tells everyone listening.
   function setValue(entry) {
     hidden.value = entry ? entry.id : '';
     searchInput.value = entry ? `${entry.name}${entry.kind === 'area' ? '' : ` (${entry.area})`}` : '';
     hidden.dispatchEvent(new Event('change', { bubbles: true }));
     if (typeof options.onSelect === 'function') options.onSelect(entry);
   }
-
+ 
+  // No matches — show a message, plus a "suggest this" link if we can.
   function renderEmpty(query) {
     const L = lang();
     const suggestHref = typeof options.missingStopLink === 'function' ? options.missingStopLink(query) : null;
@@ -242,11 +223,13 @@ function rbReplaceSelectWithStopCombobox(selectId, opts) {
     currentEntries = [];
     activeIndex = -1;
   }
-
+ 
+  // Draws matching stops, grouped by area.
   function renderGroups(groups, query) {
     const L = lang();
     const totalCount = groups.reduce((sum, g) => sum + g.items.length, 0);
     let html = `<div class="combobox-count">${L === 'fr' ? `${totalCount} arrêt(s) disponible(s)` : `${totalCount} stop${totalCount === 1 ? '' : 's'} available`}</div>`;
+ 
     currentEntries = [];
     groups.forEach((group) => {
       html += `<div class="combobox-group-label">${group.area}</div>`;
@@ -259,40 +242,39 @@ function rbReplaceSelectWithStopCombobox(selectId, opts) {
         </div>`;
       });
     });
+ 
     listbox.innerHTML = html;
     currentOptionEls = Array.from(listbox.querySelectorAll('.combobox-option'));
     activeIndex = -1;
+ 
     currentOptionEls.forEach((el) => {
+      // mousedown (not click) fires before the input's blur closes the list.
       el.addEventListener('mousedown', (e) => {
         e.preventDefault();
-        const idx = Number(el.getAttribute('data-idx'));
-        setValue(currentEntries[idx]);
+        setValue(currentEntries[Number(el.getAttribute('data-idx'))]);
         closeListbox();
       });
     });
   }
-
+ 
   function renderResults(query) {
     const results = rbSearchStops(query, preferredAreaName());
-    if (results.length === 0) {
-      renderEmpty(query.trim());
-      return;
-    }
-    renderGroups(rbGroupStopsByArea(results), query);
+    results.length === 0 ? renderEmpty(query.trim()) : renderGroups(rbGroupStopsByArea(results), query);
   }
-
+ 
   function openListbox() {
     listbox.hidden = false;
     searchInput.setAttribute('aria-expanded', 'true');
     renderResults(searchInput.value);
   }
-
+ 
   function closeListbox() {
     listbox.hidden = true;
     searchInput.setAttribute('aria-expanded', 'false');
     activeIndex = -1;
   }
-
+ 
+  // Moves the keyboard highlight up/down (delta is +1 or -1).
   function moveActive(delta) {
     if (!currentOptionEls.length) return;
     currentOptionEls.forEach((el) => el.classList.remove('is-active'));
@@ -302,36 +284,30 @@ function rbReplaceSelectWithStopCombobox(selectId, opts) {
     el.scrollIntoView({ block: 'nearest' });
     searchInput.setAttribute('aria-activedescendant', el.id);
   }
-
+ 
+  // Typing, arrow keys, clicking away — all the ways this widget reacts.
   searchInput.addEventListener('focus', openListbox);
   searchInput.addEventListener('input', () => {
     if (hidden.value) { hidden.value = ''; hidden.dispatchEvent(new Event('change', { bubbles: true })); }
     openListbox();
   });
   searchInput.addEventListener('keydown', (e) => {
-    if (e.key === 'ArrowDown') { e.preventDefault(); if (listbox.hidden) openListbox(); else moveActive(1); }
+    if (e.key === 'ArrowDown') { e.preventDefault(); listbox.hidden ? openListbox() : moveActive(1); }
     else if (e.key === 'ArrowUp') { e.preventDefault(); moveActive(-1); }
-    else if (e.key === 'Enter') { if (!listbox.hidden && activeIndex >= 0) { e.preventDefault(); setValue(currentEntries[activeIndex]); closeListbox(); } }
+    else if (e.key === 'Enter' && !listbox.hidden && activeIndex >= 0) { e.preventDefault(); setValue(currentEntries[activeIndex]); closeListbox(); }
     else if (e.key === 'Escape') { closeListbox(); }
   });
-  document.addEventListener('click', (e) => {
-    if (!wrapper.contains(e.target)) closeListbox();
-  });
-  clearBtn.addEventListener('click', () => {
-    setValue(null);
-    searchInput.focus();
-    openListbox();
-  });
+  document.addEventListener('click', (e) => { if (!wrapper.contains(e.target)) closeListbox(); });
+  clearBtn.addEventListener('click', () => { setValue(null); searchInput.focus(); openListbox(); });
+ 
   if (options.areaFieldId) {
     const areaEl = document.getElementById(options.areaFieldId);
     if (areaEl) areaEl.addEventListener('change', () => { if (!listbox.hidden) renderResults(searchInput.value); });
   }
-
+ 
+  // What other files use to control this widget from outside.
   return {
-    setById(id) {
-      const entry = rbStopEntryById(id);
-      setValue(entry);
-    },
+    setById(id) { setValue(rbStopEntryById(id)); },
     refreshLanguage() {
       if (hidden.value) {
         const entry = rbStopEntryById(hidden.value);
@@ -343,4 +319,3 @@ function rbReplaceSelectWithStopCombobox(selectId, opts) {
     searchInput,
   };
 }
-
