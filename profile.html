@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RouteBack | My Profile</title>
+<meta name="description" content="View and manage your local RouteBack profile, saved routes and recent searches on this device.">
+<link rel="icon" type="image/svg+xml" href="images/logo/favicon.svg">
+<link rel="icon" type="image/jpeg" sizes="32x32" href="images/logo/favicon-32.jpg">
+<link rel="apple-touch-icon" href="images/logo/apple-touch-icon.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared/css/main.css">
+</head>
+<body data-page="profile">
+<a class="skip-link" href="#main">Skip to content</a>
+<header id="site-header" class="site-header"></header>
+
+<main id="main">
+  <section class="section section--tight" style="position:relative;overflow:hidden;">
+    <div class="pattern-transit" aria-hidden="true" style="position:absolute;inset:0;z-index:0;"></div>
+    <div class="container container--form" style="position:relative;z-index:1;">
+
+      <div id="no-session-notice" class="notice notice-warning" style="display:none;margin-bottom:var(--space-5);">
+        <svg class="notice-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 9v4M12 17h.01M10.3 3.9L2.7 17a2 2 0 001.7 3h15.2a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z" stroke="currentColor" stroke-width="1.8"/></svg>
+        <span>
+          <span lang="en" data-i18n>No profile is currently open on this device.</span>
+          <span lang="fr" data-i18n>Aucun profil n’est actuellement ouvert sur cet appareil.</span>
+          <a href="login.html"><span lang="en" data-i18n>Open your profile.</span><span lang="fr" data-i18n>Ouvrez votre profil.</span></a>
+        </span>
+      </div>
+
+      <div id="profile-view">
+        <p class="eyebrow"><span lang="en" data-i18n>My Profile</span><span lang="fr" data-i18n>Mon profil</span></p>
+        <h1 id="profile-name-heading">RouteBack</h1>
+        <div class="grid-2" style="margin-bottom:var(--space-6);">
+          <div class="card">
+            <h4><span lang="en" data-i18n>About you</span><span lang="fr" data-i18n>À propos de vous</span></h4>
+            <dl id="profile-about-list" class="stack" style="gap:var(--space-2);font-size:var(--fs-small);"></dl>
+          </div>
+          <div class="card">
+            <h4><span lang="en" data-i18n>Travel preferences</span><span lang="fr" data-i18n>Préférences de trajet</span></h4>
+            <dl id="profile-travel-list" class="stack" style="gap:var(--space-2);font-size:var(--fs-small);"></dl>
+          </div>
+        </div>
+
+        <div class="grid-3" style="margin-bottom:var(--space-6);">
+          <div class="card text-center">
+            <div class="meta-value" style="font-size:2rem;font-weight:700;color:var(--rb-purple-600);" id="saved-count">0</div>
+            <p class="field-hint" style="margin-top:0;"><span lang="en" data-i18n>Saved routes</span><span lang="fr" data-i18n>Trajets enregistrés</span></p>
+            <a class="btn btn-secondary btn-sm" href="planner.html#saved-routes"><span lang="en" data-i18n>View Saved Routes</span><span lang="fr" data-i18n>Voir les trajets enregistrés</span></a>
+          </div>
+          <div class="card text-center">
+            <div class="meta-value" style="font-size:2rem;font-weight:700;color:var(--rb-purple-600);" id="recent-count">0</div>
+            <p class="field-hint" style="margin-top:0;"><span lang="en" data-i18n>Recent searches</span><span lang="fr" data-i18n>Recherches récentes</span></p>
+            <div class="cluster gap-2" style="justify-content:center;">
+              <a class="btn btn-secondary btn-sm" href="planner.html#recent-searches"><span lang="en" data-i18n>View</span><span lang="fr" data-i18n>Voir</span></a>
+              <button type="button" class="btn btn-ghost btn-sm" id="clear-recent-btn"><span lang="en" data-i18n>Clear</span><span lang="fr" data-i18n>Effacer</span></button>
+            </div>
+          </div>
+          <div class="card text-center">
+            <div class="meta-value" style="font-size:1.1rem;font-weight:700;" id="profile-dates"></div>
+            <p class="field-hint" style="margin-top:0;"><span lang="en" data-i18n>Created / updated</span><span lang="fr" data-i18n>Créé / mis à jour</span></p>
+          </div>
+        </div>
+
+        <div class="cluster gap-3 flex-wrap" style="margin-bottom:var(--space-6);">
+          <a class="btn btn-primary" href="#" id="edit-profile-toggle"><span lang="en" data-i18n>Edit Profile</span><span lang="fr" data-i18n>Modifier le profil</span></a>
+          <button type="button" class="btn btn-ghost" id="logout-btn"><span lang="en" data-i18n>Log Out</span><span lang="fr" data-i18n>Se déconnecter</span></button>
+          <button type="button" class="btn btn-danger-ghost" id="delete-profile-btn"><span lang="en" data-i18n>Delete Local Profile</span><span lang="fr" data-i18n>Supprimer le profil local</span></button>
+        </div>
+
+        <!-- Edit Profile (hidden until toggled) -->
+        <form id="edit-profile-form" class="form-card" hidden novalidate>
+          <h3><span lang="en" data-i18n>Edit Profile</span><span lang="fr" data-i18n>Modifier le profil</span></h3>
+          <div class="error-summary" id="edit-error-summary" role="alert" aria-live="assertive">
+            <h2><span lang="en" data-i18n>Please check the following</span><span lang="fr" data-i18n>Veuillez vérifier les éléments suivants</span></h2>
+            <ul id="edit-error-summary-list"></ul>
+          </div>
+          <div class="field-row field-row-2">
+            <div class="field"><label for="ep-first"><span lang="en" data-i18n>First name</span><span lang="fr" data-i18n>Prénom</span></label><input type="text" id="ep-first" minlength="2" maxlength="60" pattern="[A-Za-zÀ-ÖØ-öø-ÿ]{2,30}(?:[ '\-][A-Za-zÀ-ÖØ-öø-ÿ]{2,30}){0,3}" required>
+              <p class="field-error" role="alert"><span lang="en" data-i18n>Enter a first name using only letters, 2-30 characters.</span><span lang="fr" data-i18n>Saisissez un prénom composé uniquement de lettres, 2 à 30 caractères.</span></p></div>
+            <div class="field"><label for="ep-last"><span lang="en" data-i18n>Last name</span><span lang="fr" data-i18n>Nom</span></label><input type="text" id="ep-last" minlength="2" maxlength="60" pattern="[A-Za-zÀ-ÖØ-öø-ÿ]{2,30}(?:[ '\-][A-Za-zÀ-ÖØ-öø-ÿ]{2,30}){0,3}" required>
+              <p class="field-error" role="alert"><span lang="en" data-i18n>Enter a last name using only letters, 2-30 characters.</span><span lang="fr" data-i18n>Saisissez un nom composé uniquement de lettres, 2 à 30 caractères.</span></p></div>
+          </div>
+          <div class="field-row field-row-2">
+            <div class="field"><label for="ep-email"><span lang="en" data-i18n>Email</span><span lang="fr" data-i18n>E-mail</span></label><input type="email" id="ep-email" pattern="[^\s@]+@[^\s@]+\.[^\s@]+" required>
+              <p class="field-error" role="alert"><span lang="en" data-i18n>Enter a valid email address.</span><span lang="fr" data-i18n>Saisissez une adresse e-mail valide.</span></p></div>
+            <div class="field"><label for="ep-phone"><span lang="en" data-i18n>Phone (optional)</span><span lang="fr" data-i18n>Téléphone (facultatif)</span></label><input type="tel" id="ep-phone" pattern="(\+230[\s-]?)?[2-9]\d{3}[\s-]?\d{4}">
+              <p class="field-error" role="alert"><span lang="en" data-i18n>Enter a valid Mauritius phone number or leave blank.</span><span lang="fr" data-i18n>Saisissez un numéro mauricien valide ou laissez vide.</span></p></div>
+          </div>
+          <div class="field-row field-row-2">
+            <div class="field"><label for="ep-institution"><span lang="en" data-i18n>Institution</span><span lang="fr" data-i18n>Établissement</span></label><input type="text" id="ep-institution" required></div>
+            <div class="field"><label for="ep-campus"><span lang="en" data-i18n>Campus</span><span lang="fr" data-i18n>Campus</span></label><input type="text" id="ep-campus" required></div>
+          </div>
+          <div class="field-row field-row-2">
+            <div class="field"><label for="ep-area"><span lang="en" data-i18n>Starting area</span><span lang="fr" data-i18n>Zone de départ</span></label><select id="ep-area" required></select></div>
+            <div class="field"><label for="ep-stop"><span lang="en" data-i18n>Starting stop</span><span lang="fr" data-i18n>Arrêt de départ</span></label><select id="ep-stop"></select></div>
+          </div>
+          <div class="field">
+            <label for="ep-pass"><span lang="en" data-i18n>Bus-pass status</span><span lang="fr" data-i18n>Statut de carte de bus</span></label>
+            <select id="ep-pass"></select>
+          </div>
+          <div class="cluster gap-3" style="margin-top:var(--space-5);">
+            <button type="submit" class="btn btn-primary"><span lang="en" data-i18n>Save changes</span><span lang="fr" data-i18n>Enregistrer les modifications</span></button>
+            <button type="button" class="btn btn-ghost" id="edit-profile-cancel"><span lang="en" data-i18n>Cancel</span><span lang="fr" data-i18n>Annuler</span></button>
+          </div>
+        </form>
+
+        <div class="notice notice-success" id="profile-success-message" style="display:none;margin-top:var(--space-5);" role="status" aria-live="polite"></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- Delete profile confirmation modal -->
+<div class="modal-backdrop" id="delete-profile-modal" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="delete-profile-title">
+    <div class="modal-head">
+      <h2 id="delete-profile-title" style="margin-bottom:0;"><span lang="en" data-i18n>Delete this local profile?</span><span lang="fr" data-i18n>Supprimer ce profil local ?</span></h2>
+    </div>
+    <p>
+      <span lang="en" data-i18n>This removes your profile, saved routes and recent searches from this device. This cannot be undone.</span>
+      <span lang="fr" data-i18n>Cela supprime votre profil, vos trajets enregistrés et vos recherches récentes de cet appareil. Cette action est irréversible.</span>
+    </p>
+    <div class="modal-actions">
+      <button type="button" class="btn btn-ghost" id="delete-profile-cancel"><span lang="en" data-i18n>Cancel</span><span lang="fr" data-i18n>Annuler</span></button>
+      <button type="button" class="btn btn-danger-ghost" id="delete-profile-confirm" data-autofocus><span lang="en" data-i18n>Delete profile</span><span lang="fr" data-i18n>Supprimer le profil</span></button>
+    </div>
+  </div>
+</div>
+
+<footer id="site-footer" class="site-footer"></footer>
+
+<script src="shared/js/storage.js" defer></script>
+<script src="shared/js/i18n.js" defer></script>
+<script src="shared/js/theme.js" defer></script>
+<script src="shared/js/ui.js" defer></script>
+<script src="shared/js/validation.js" defer></script>
+<script src="shared/js/data.js" defer></script>
+<script src="shared/js/planner-tools.js" defer></script>
+<script src="shared/js/nav.js" defer></script>
+<script src="assets/js/profile.js" defer></script>
+<script src="shared/js/partials.js" defer></script>
+</body>
+</html>
