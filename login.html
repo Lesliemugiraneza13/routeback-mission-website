@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RouteBack | Open Profile</title>
+<meta name="description" content="Open your local RouteBack profile on this device to see your saved routes and travel preferences.">
+<link rel="icon" type="image/svg+xml" href="images/logo/favicon.svg">
+<link rel="icon" type="image/jpeg" sizes="32x32" href="images/logo/favicon-32.jpg">
+<link rel="apple-touch-icon" href="images/logo/apple-touch-icon.jpg">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared/css/main.css">
+</head>
+<body data-page="login">
+<a class="skip-link" href="#main">Skip to content</a>
+<header id="site-header" class="site-header"></header>
+
+<main id="main">
+  <section class="section section--tight" style="position:relative;overflow:hidden;">
+    <div class="pattern-transit" aria-hidden="true" style="position:absolute;inset:0;z-index:0;"></div>
+    <div class="container container--form" style="position:relative;z-index:1;">
+      <div class="rounded-lg" style="aspect-ratio:21/7;margin-bottom:var(--space-6);">
+        <img class="img-cover" src="images/hero/confused-student-university-stop.jpg" alt="A student looks uncertainly at a phone next to a university bus stop timetable.">
+      </div>
+      <p class="eyebrow"><span lang="en" data-i18n>Open Profile</span><span lang="fr" data-i18n>Ouvrir un profil</span></p>
+      <h1><span lang="en" data-i18n>Open your RouteBack profile</span><span lang="fr" data-i18n>Ouvrez votre profil RouteBack</span></h1>
+      <p style="margin-bottom:var(--space-6);">
+        <span lang="en" data-i18n>Find the local profile stored on this device to see your saved routes and travel preferences.</span>
+        <span lang="fr" data-i18n>Retrouvez le profil local stocké sur cet appareil pour voir vos trajets enregistrés et préférences.</span>
+      </p>
+
+      <div class="notice notice-info" id="pending-banner" style="display:none;margin-bottom:var(--space-5);">
+        <svg class="notice-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 21s7-3.5 7-10V5l-7-3-7 3v6c0 6.5 7 10 7 10z" stroke="currentColor" stroke-width="1.6"/></svg>
+        <span><span lang="en" data-i18n>Open or create a profile to save the route you were planning. You'll return to it automatically.</span><span lang="fr" data-i18n>Ouvrez ou créez un profil pour enregistrer le trajet que vous planifiiez. Vous y reviendrez automatiquement.</span></span>
+      </div>
+
+      <div id="no-profile-notice" class="notice notice-warning" style="display:none;margin-bottom:var(--space-5);">
+        <svg class="notice-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 9v4M12 17h.01M10.3 3.9L2.7 17a2 2 0 001.7 3h15.2a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z" stroke="currentColor" stroke-width="1.8"/></svg>
+        <span>
+          <span lang="en" data-i18n>No profile has been created on this device yet.</span>
+          <span lang="fr" data-i18n>Aucun profil n’a encore été créé sur cet appareil.</span>
+          <a href="signup.html" id="no-profile-cta"><span lang="en" data-i18n>Create one now.</span><span lang="fr" data-i18n>Créez-en un maintenant.</span></a>
+        </span>
+      </div>
+
+      <div class="error-summary" id="error-summary" role="alert" aria-live="assertive">
+        <h2><span lang="en" data-i18n>Please check the following</span><span lang="fr" data-i18n>Veuillez vérifier les éléments suivants</span></h2>
+        <ul id="error-summary-list"></ul>
+      </div>
+
+      <form id="login-form" class="form-card" novalidate>
+        <fieldset class="form-fieldset">
+          <legend><span lang="en" data-i18n>Find your profile</span><span lang="fr" data-i18n>Retrouver votre profil</span></legend>
+          <div class="field">
+            <label for="li-email"><span lang="en" data-i18n>Email</span><span lang="fr" data-i18n>E-mail</span></label>
+            <input type="email" id="li-email" autocomplete="email" pattern="[^\s@]+@[^\s@]+\.[^\s@]+" required>
+            <p class="field-error" role="alert"><span lang="en" data-i18n>Enter the email you used to create your profile.</span><span lang="fr" data-i18n>Saisissez l’e-mail utilisé pour créer votre profil.</span></p>
+          </div>
+          <div class="field">
+            <label for="li-password"><span lang="en" data-i18n>Prototype password</span><span lang="fr" data-i18n>Mot de passe prototype</span></label>
+            <div class="password-field">
+              <input type="password" id="li-password" autocomplete="current-password">
+              <button type="button" class="password-toggle" data-toggle-for="li-password" aria-label="Show password"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.8"/></svg></button>
+            </div>
+            <p class="field-hint"><span lang="en" data-i18n>This is a frontend demonstration field only, it is discarded immediately and never checked against anything stored.</span><span lang="fr" data-i18n>Ce champ n’est qu’une démonstration frontend, il est immédiatement supprimé et jamais comparé à quoi que ce soit de stocké.</span></p>
+          </div>
+          <div class="field checkbox-row">
+            <input type="checkbox" id="li-keep-open">
+            <label for="li-keep-open" style="font-weight:500;">
+              <span lang="en" data-i18n>Keep this local profile open on this device</span>
+              <span lang="fr" data-i18n>Garder ce profil local ouvert sur cet appareil</span>
+            </label>
+          </div>
+        </fieldset>
+        <button type="submit" class="btn btn-primary btn-block"><span lang="en" data-i18n>Open profile</span><span lang="fr" data-i18n>Ouvrir le profil</span></button>
+        <p class="field-hint text-center" style="margin-top:var(--space-4);">
+          <span lang="en" data-i18n>Search without a profile?</span><span lang="fr" data-i18n>Rechercher sans profil ?</span>
+          <a href="index.html"><span lang="en" data-i18n>Continue without profile.</span><span lang="fr" data-i18n>Continuer sans profil.</span></a>
+        </p>
+        <p class="field-hint text-center" style="margin-top:var(--space-2);">
+          <span lang="en" data-i18n>New here?</span><span lang="fr" data-i18n>Nouveau ici ?</span>
+          <a href="signup.html" id="create-instead-link"><span lang="en" data-i18n>Create a profile.</span><span lang="fr" data-i18n>Créez un profil.</span></a>
+        </p>
+      </form>
+
+      <div class="notice notice-success" id="success-message" style="display:none;margin-top:var(--space-5);" role="status" aria-live="polite"></div>
+    </div>
+  </section>
+</main>
+
+<footer id="site-footer" class="site-footer"></footer>
+
+<script src="shared/js/storage.js" defer></script>
+<script src="shared/js/i18n.js" defer></script>
+<script src="shared/js/theme.js" defer></script>
+<script src="shared/js/ui.js" defer></script>
+<script src="shared/js/validation.js" defer></script>
+<script src="shared/js/data.js" defer></script>
+<script src="shared/js/planner-tools.js" defer></script>
+<script src="shared/js/nav.js" defer></script>
+<script src="assets/js/login.js" defer></script>
+<script src="shared/js/partials.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RouteBack | Create Profile</title>
+<meta name="description" content="Create a local RouteBack profile stored only on this device, to speed up future journey planning.">
+<link rel="icon" type="image/svg+xml" href="images/logo/favicon.svg">
+<link rel="icon" type="image/jpeg" sizes="32x32" href="images/logo/favicon-32.jpg">
+<link rel="apple-touch-icon" href="images/logo/apple-touch-icon.jpg">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared/css/main.css">
+</head>
+<body data-page="signup">
+<a class="skip-link" href="#main">Skip to content</a>
+<header id="site-header" class="site-header"></header>
+
+<main id="main">
+  <section class="section section--tight pattern-photo-wash">
+    <div class="container container--form">
+      <div class="rounded-lg" style="aspect-ratio:21/7;margin-bottom:var(--space-6);">
+        <img class="img-cover" src="images/hero/group-waiting-dusk.jpg" alt="A group of students waiting together at a bus stop at dusk.">
+      </div>
+      <p class="eyebrow"><span lang="en" data-i18n>Create Profile</span><span lang="fr" data-i18n>Créer un profil</span></p>
+      <h1><span lang="en" data-i18n>Create your RouteBack profile</span><span lang="fr" data-i18n>Créez votre profil RouteBack</span></h1>
+      <p style="margin-bottom:var(--space-6);">
+        <span lang="en" data-i18n>Save a few travel preferences on this device to make future journey planning quicker.</span>
+        <span lang="fr" data-i18n>Enregistrez quelques préférences de trajet sur cet appareil pour planifier plus rapidement à l’avenir.</span>
+      </p>
+
+      <div class="notice notice-info" id="pending-banner" style="display:none;margin-bottom:var(--space-5);">
+        <svg class="notice-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 21s7-3.5 7-10V5l-7-3-7 3v6c0 6.5 7 10 7 10z" stroke="currentColor" stroke-width="1.6"/></svg>
+        <span><span lang="en" data-i18n>Create a profile to save the route you were planning. You'll return to it automatically.</span><span lang="fr" data-i18n>Créez un profil pour enregistrer le trajet que vous planifiiez. Vous y reviendrez automatiquement.</span></span>
+      </div>
+
+      <div class="notice notice-warning" id="duplicate-profile-notice" style="display:none;margin-bottom:var(--space-5);">
+        <svg class="notice-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 9v4M12 17h.01M10.3 3.9L2.7 17a2 2 0 001.7 3h15.2a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z" stroke="currentColor" stroke-width="1.8"/></svg>
+        <span>
+          <span style="display:block;margin-bottom:var(--space-3);">
+            <span lang="en" data-i18n>This device already has a local RouteBack profile. Creating a new one is blocked until you choose an option below.</span>
+            <span lang="fr" data-i18n>Cet appareil dispose déjà d’un profil RouteBack local. La création d’un nouveau profil est bloquée tant que vous n’avez pas choisi une option ci-dessous.</span>
+          </span>
+          <span class="cluster gap-2 flex-wrap">
+            <a class="btn btn-secondary btn-sm" id="duplicate-open-existing-link" href="login.html"><span lang="en" data-i18n>Open existing profile</span><span lang="fr" data-i18n>Ouvrir le profil existant</span></a>
+            <button type="button" class="btn btn-danger-ghost btn-sm" id="duplicate-replace-btn"><span lang="en" data-i18n>Replace existing profile</span><span lang="fr" data-i18n>Remplacer le profil existant</span></button>
+          </span>
+        </span>
+      </div>
+
+      <div class="error-summary" id="error-summary" role="alert" aria-live="assertive">
+        <h2><span lang="en" data-i18n>Please check the following</span><span lang="fr" data-i18n>Veuillez vérifier les éléments suivants</span></h2>
+        <ul id="error-summary-list"></ul>
+      </div>
+
+      <form id="signup-form" class="form-card" novalidate>
+        <fieldset class="form-fieldset">
+          <legend><span lang="en" data-i18n>About you</span><span lang="fr" data-i18n>À propos de vous</span></legend>
+          <div class="field-row field-row-2">
+            <div class="field"><label for="su-first"><span lang="en" data-i18n>First name</span><span lang="fr" data-i18n>Prénom</span></label><input type="text" id="su-first" autocomplete="given-name" minlength="2" maxlength="60" pattern="[A-Za-zÀ-ÖØ-öø-ÿ]{2,30}(?:[ '\-][A-Za-zÀ-ÖØ-öø-ÿ]{2,30}){0,3}" required>
+              <p class="field-error" role="alert"><span lang="en" data-i18n>Enter your first name.</span><span lang="fr" data-i18n>Saisissez votre prénom.</span></p></div>
+            <div class="field"><label for="su-last"><span lang="en" data-i18n>Last name</span><span lang="fr" data-i18n>Nom</span></label><input type="text" id="su-last" autocomplete="family-name" minlength="2" maxlength="60" pattern="[A-Za-zÀ-ÖØ-öø-ÿ]{2,30}(?:[ '\-][A-Za-zÀ-ÖØ-öø-ÿ]{2,30}){0,3}" required>
+              <p class="field-error" role="alert"><span lang="en" data-i18n>Enter your last name.</span><span lang="fr" data-i18n>Saisissez votre nom.</span></p></div>
+          </div>
+          <div class="field-row field-row-2">
+            <div class="field"><label for="su-email"><span lang="en" data-i18n>Email</span><span lang="fr" data-i18n>E-mail</span></label><input type="email" id="su-email" autocomplete="email" pattern="[^\s@]+@[^\s@]+\.[^\s@]+" required>
+              <p class="field-error" role="alert"><span lang="en" data-i18n>Enter a valid email address.</span><span lang="fr" data-i18n>Saisissez une adresse e-mail valide.</span></p></div>
+            <div class="field"><label for="su-phone"><span lang="en" data-i18n>Phone (optional, Mauritius)</span><span lang="fr" data-i18n>Téléphone (facultatif, Maurice)</span></label><input type="tel" id="su-phone" autocomplete="tel" placeholder="+230 5xxx xxxx" pattern="(\+230[\s-]?)?[2-9]\d{3}[\s-]?\d{4}">
+              <p class="field-error" role="alert"><span lang="en" data-i18n>Enter a valid Mauritius phone number or leave blank.</span><span lang="fr" data-i18n>Saisissez un numéro mauricien valide ou laissez vide.</span></p></div>
+          </div>
+        </fieldset>
+
+        <fieldset class="form-fieldset">
+          <legend><span lang="en" data-i18n>Study details</span><span lang="fr" data-i18n>Détails d’études</span></legend>
+          <div class="field-row field-row-2">
+            <div class="field"><label for="su-institution"><span lang="en" data-i18n>Institution</span><span lang="fr" data-i18n>Établissement</span></label><input type="text" id="su-institution" required>
+              <p class="field-error" role="alert"><span lang="en" data-i18n>Enter your institution.</span><span lang="fr" data-i18n>Saisissez votre établissement.</span></p></div>
+            <div class="field"><label for="su-campus"><span lang="en" data-i18n>Campus</span><span lang="fr" data-i18n>Campus</span></label><input type="text" id="su-campus" required>
+              <p class="field-error" role="alert"><span lang="en" data-i18n>Enter your campus.</span><span lang="fr" data-i18n>Saisissez votre campus.</span></p></div>
+          </div>
+        </fieldset>
+
+        <fieldset class="form-fieldset">
+          <legend><span lang="en" data-i18n>Travel preferences</span><span lang="fr" data-i18n>Préférences de trajet</span></legend>
+          <div class="field-row field-row-2">
+            <div class="field"><label for="su-area"><span lang="en" data-i18n>Starting area</span><span lang="fr" data-i18n>Zone de départ</span></label><select id="su-area" required></select>
+              <p class="field-error" role="alert"><span lang="en" data-i18n>Choose a starting area.</span><span lang="fr" data-i18n>Choisissez une zone de départ.</span></p></div>
+            <div class="field"><label for="su-stop"><span lang="en" data-i18n>Starting stop</span><span lang="fr" data-i18n>Arrêt de départ</span></label><select id="su-stop"></select></div>
+          </div>
+          <div class="field">
+            <label for="su-pass"><span lang="en" data-i18n>Bus-pass status</span><span lang="fr" data-i18n>Statut de carte de bus</span></label>
+            <select id="su-pass">
+              <option value="yes" data-en="Yes, I have a valid student bus pass" data-fr="Oui, j’ai une carte de bus étudiante valide"></option>
+              <option value="no" data-en="No, not yet" data-fr="Non, pas encore"></option>
+            </select>
+          </div>
+        </fieldset>
+
+        <fieldset class="form-fieldset">
+          <legend><span lang="en" data-i18n>Prototype password</span><span lang="fr" data-i18n>Mot de passe prototype</span></legend>
+          <p class="field-hint" style="margin-top:0;">
+            <span lang="en" data-i18n>This field only demonstrates form validation for this student project. It is never stored, logged or compared later, it is cleared the moment this form is submitted.</span>
+            <span lang="fr" data-i18n>Ce champ ne fait que démontrer la validation de formulaire pour ce projet étudiant. Il n’est jamais stocké, journalisé ni comparé plus tard, il est effacé dès la soumission du formulaire.</span>
+          </p>
+          <div class="field-row field-row-2">
+            <div class="field">
+              <label for="su-password"><span lang="en" data-i18n>Prototype password</span><span lang="fr" data-i18n>Mot de passe prototype</span></label>
+              <div class="password-field">
+                <input type="password" id="su-password" autocomplete="new-password" required minlength="8" maxlength="64" pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9\s]).{8,64}" aria-describedby="password-checklist">
+                <button type="button" class="password-toggle" data-toggle-for="su-password" aria-label="Show password"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.8"/></svg></button>
+              </div>
+              <ul id="password-checklist" class="field-hint" style="list-style:none;padding-left:0;margin-top:var(--space-2);" aria-live="polite">
+                <li id="pw-check-length"><span class="pw-check-icon" aria-hidden="true">○</span> <span lang="en" data-i18n>8-64 characters</span><span lang="fr" data-i18n>8 à 64 caractères</span></li>
+                <li id="pw-check-upper"><span class="pw-check-icon" aria-hidden="true">○</span> <span lang="en" data-i18n>One uppercase letter</span><span lang="fr" data-i18n>Une lettre majuscule</span></li>
+                <li id="pw-check-lower"><span class="pw-check-icon" aria-hidden="true">○</span> <span lang="en" data-i18n>One lowercase letter</span><span lang="fr" data-i18n>Une lettre minuscule</span></li>
+                <li id="pw-check-number"><span class="pw-check-icon" aria-hidden="true">○</span> <span lang="en" data-i18n>One number</span><span lang="fr" data-i18n>Un chiffre</span></li>
+                <li id="pw-check-special"><span class="pw-check-icon" aria-hidden="true">○</span> <span lang="en" data-i18n>One special character</span><span lang="fr" data-i18n>Un caractère spécial</span></li>
+              </ul>
+              <p class="field-error" role="alert"><span lang="en" data-i18n>Use 8-64 characters with an uppercase letter, a lowercase letter, a number and a special character.</span><span lang="fr" data-i18n>Utilisez 8 à 64 caractères avec une majuscule, une minuscule, un chiffre et un caractère spécial.</span></p>
+            </div>
+            <div class="field">
+              <label for="su-password-confirm"><span lang="en" data-i18n>Confirm password</span><span lang="fr" data-i18n>Confirmer le mot de passe</span></label>
+              <div class="password-field">
+                <input type="password" id="su-password-confirm" autocomplete="new-password" required>
+                <button type="button" class="password-toggle" data-toggle-for="su-password-confirm" aria-label="Show password"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.8"/></svg></button>
+              </div>
+              <p class="field-error" role="alert"><span lang="en" data-i18n>Passwords must match.</span><span lang="fr" data-i18n>Les mots de passe doivent correspondre.</span></p>
+            </div>
+          </div>
+        </fieldset>
+
+        <fieldset class="form-fieldset">
+          <legend><span lang="en" data-i18n>Acknowledgement</span><span lang="fr" data-i18n>Confirmation</span></legend>
+          <div class="field checkbox-row">
+            <input type="checkbox" id="su-ack" required>
+            <label for="su-ack" style="font-weight:500;">
+              <span lang="en" data-i18n>I understand this profile and any saved routes are stored only on this device, and that this is not a secure account system.</span>
+              <span lang="fr" data-i18n>Je comprends que ce profil et les trajets enregistrés sont stockés uniquement sur cet appareil, et qu’il ne s’agit pas d’un système de compte sécurisé.</span>
+            </label>
+          </div>
+          <p class="field-error" id="ack-error" role="alert"><span lang="en" data-i18n>Please confirm you understand before continuing.</span><span lang="fr" data-i18n>Veuillez confirmer que vous avez compris avant de continuer.</span></p>
+          <div class="field checkbox-row" style="margin-top:var(--space-4);">
+            <input type="checkbox" id="su-keep-open">
+            <label for="su-keep-open" style="font-weight:500;">
+              <span lang="en" data-i18n>Keep this local profile open on this device</span>
+              <span lang="fr" data-i18n>Garder ce profil local ouvert sur cet appareil</span>
+            </label>
+          </div>
+        </fieldset>
+
+        <button type="submit" class="btn btn-primary btn-block" id="signup-submit-btn"><span lang="en" data-i18n>Create profile</span><span lang="fr" data-i18n>Créer le profil</span></button>
+        <p class="field-hint text-center" style="margin-top:var(--space-4);">
+          <span lang="en" data-i18n>Already have a local profile on this device?</span><span lang="fr" data-i18n>Vous avez déjà un profil local sur cet appareil ?</span>
+          <a href="login.html" id="signup-footer-open-existing-link"><span lang="en" data-i18n>Open it instead.</span><span lang="fr" data-i18n>Ouvrez-le à la place.</span></a>
+        </p>
+      </form>
+
+      <div class="notice notice-success" id="success-message" style="display:none;margin-top:var(--space-5);" role="status" aria-live="polite"></div>
+    </div>
+  </section>
+</main>
+
+<!-- Replace-existing-profile confirmation modal (hard-block path) -->
+<div class="modal-backdrop" id="replace-profile-confirm-modal" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="replace-profile-confirm-title">
+    <div class="modal-head">
+      <h2 id="replace-profile-confirm-title" style="margin-bottom:0;"><span lang="en" data-i18n>Replace your existing profile?</span><span lang="fr" data-i18n>Remplacer votre profil existant ?</span></h2>
+    </div>
+    <p><span lang="en" data-i18n>This will permanently delete the profile, saved routes and recent searches already stored on this device. This cannot be undone.</span><span lang="fr" data-i18n>Cela supprimera définitivement le profil, les trajets enregistrés et les recherches récentes déjà stockés sur cet appareil. Cette action est irréversible.</span></p>
+    <div class="modal-actions">
+      <button type="button" class="btn btn-ghost" id="replace-profile-confirm-no"><span lang="en" data-i18n>Cancel</span><span lang="fr" data-i18n>Annuler</span></button>
+      <button type="button" class="btn btn-danger-ghost" id="replace-profile-confirm-yes" data-autofocus><span lang="en" data-i18n>Delete and replace</span><span lang="fr" data-i18n>Supprimer et remplacer</span></button>
+    </div>
+  </div>
+</div>
+
+<footer id="site-footer" class="site-footer"></footer>
+
+<script src="shared/js/storage.js" defer></script>
+<script src="shared/js/i18n.js" defer></script>
+<script src="shared/js/theme.js" defer></script>
+<script src="shared/js/ui.js" defer></script>
+<script src="shared/js/validation.js" defer></script>
+<script src="shared/js/data.js" defer></script>
+<script src="shared/js/planner-tools.js" defer></script>
+<script src="shared/js/nav.js" defer></script>
+<script src="assets/js/signup.js" defer></script>
+<script src="shared/js/partials.js" defer></script>
+</body>
+</html>
