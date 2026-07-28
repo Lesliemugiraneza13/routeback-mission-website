@@ -4,10 +4,12 @@
  * mission.html, ...), so `root` is always an empty string. It's kept as a
  * parameter only so the link-building code below reads the same everywhere.
  */
+// Purpose: Builds paired English and French markup so the site can switch language content in a consistent way.
 function rbBilingual(en, fr, tag = 'span') {
   return `<${tag} lang="en" data-i18n>${en}</${tag}><${tag} lang="fr" data-i18n>${fr}</${tag}>`;
 }
 
+// Purpose: Creates the shared navigation links used by the header and mobile menu.
 function rbNavItems(root) {
   return [
     { page: 'home', href: `${root}index.html`, en: 'Home', fr: 'Accueil' },
@@ -19,6 +21,7 @@ function rbNavItems(root) {
   ];
 }
 
+// Purpose: Injects the shared header markup into the page, including navigation, theme controls, and mobile menu hooks.
 function rbRenderHeader(root) {
   const mount = document.getElementById('site-header');
   if (!mount) return;
@@ -84,6 +87,7 @@ function rbRenderHeader(root) {
   `;
 }
 
+// Purpose: Injects the shared footer markup into the page with links and brand information.
 function rbRenderFooter(root) {
   const mount = document.getElementById('site-footer');
   if (!mount) return;
@@ -150,6 +154,7 @@ function rbRenderFooter(root) {
   `;
 }
 
+// Purpose: Renders the header and footer and then announces that the shared partials are ready for other scripts.
 function rbMountPartials() {
   const root = '';
   rbRenderHeader(root);

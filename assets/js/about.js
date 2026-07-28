@@ -2,8 +2,10 @@
  * RouteBack, Our Team page: renders team cards and skills dashboard from RB_TEAM.
  */
 (function () {
+  // Purpose: Returns the active language for localized content on the about page.
   function L() { return rbCurrentLang(); }
 
+  // Purpose: Renders the team member cards using the shared team data.
   function renderTeamGrid() {
     const grid = document.getElementById('team-grid');
     const lang = L();
@@ -29,6 +31,7 @@
     `).join('');
   }
 
+  // Purpose: Builds the skills dashboard showing each team member's capabilities.
   function renderSkillsDashboard() {
     const el = document.getElementById('skills-dashboard');
     const lang = L();
@@ -49,6 +52,7 @@
     `).join('');
   }
 
+  // Purpose: Renders the team and skills sections together when the page loads.
   function render() {
     renderTeamGrid();
     renderSkillsDashboard();

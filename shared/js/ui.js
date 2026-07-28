@@ -4,6 +4,7 @@
  * toast messages, accordions, modals, the "reveal on scroll" fade-in
  * animation, and "show more" toggles (used on benefit cards etc).
  */
+// Purpose: Shows a short temporary message to the user for feedback such as success or error states.
 function rbToast(message) {
   let toast = document.querySelector('.toast');
   if (!toast) {
@@ -19,6 +20,7 @@ function rbToast(message) {
   toast._rbTimer = setTimeout(() => toast.classList.remove('is-visible'), 3200);
 }
 
+// Purpose: Enables accordion-style expand/collapse behavior for content panels.
 function rbInitAccordions(root = document) {
   root.querySelectorAll('.accordion-trigger').forEach((trigger) => {
     if (trigger._rbBound) return;
@@ -33,6 +35,7 @@ function rbInitAccordions(root = document) {
   });
 }
 
+// Purpose: Opens a modal dialog and moves focus into it for accessibility.
 function rbOpenModal(modalId) {
   const backdrop = document.getElementById(modalId);
   if (!backdrop) return;
@@ -47,6 +50,7 @@ function rbOpenModal(modalId) {
   document.addEventListener('keydown', escHandler);
 }
 
+// Purpose: Closes a modal dialog and restores the normal page scroll behavior.
 function rbCloseModal(modalId) {
   const backdrop = document.getElementById(modalId);
   if (!backdrop) return;
@@ -86,7 +90,7 @@ document.addEventListener('DOMContentLoaded', () => rbInitAccordions());
         class to it. A CSS transition (also in sections.css) then animates
         it up to full opacity. We only do this once per card, then stop
         watching it (rbObserver.unobserve), since it should never fade
-        back out again while scrolling past it.
+        back ou0                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         t again while scrolling past it.
      4. Accessibility: if the visitor's operating system has "reduce
         motion" turned on, we skip all of this entirely and leave every
         card at full opacity from the start (see the CSS media query).
@@ -94,6 +98,7 @@ document.addEventListener('DOMContentLoaded', () => rbInitAccordions());
         example, a browser tab that is minimised or hidden), a plain
         setTimeout forces every card to reveal after 1.5 seconds, so
         nothing is ever stuck looking half-empty. */
+// Purpose: Reveals cards gradually as they enter the viewport using IntersectionObserver.
 function rbInitReveal() {
   const userWantsReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (userWantsReducedMotion) return;

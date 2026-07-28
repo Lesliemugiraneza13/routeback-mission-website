@@ -6,9 +6,10 @@
   let startStopCombo = null;
   let destStopCombo = null;
 
+  // Purpose: Returns the current site language so planner text can be localized.
   function lang() { return rbCurrentLang(); }
 
-  // "Leave around" <-> "Arrive by" label above the time dropdown.
+  // Purpose: Updates the time field label based on whether the user chose Leave around or Arrive by.
   function updateTimeLabel(modeSelect) {
     const label = document.getElementById('pl-time-label');
     const isArrive = modeSelect.value === 'arrive-by';
@@ -17,8 +18,7 @@
       : '<span lang="en" data-i18n>Leave around</span><span lang="fr" data-i18n>Partir vers</span>';
   }
 
-  // Fills every dropdown, wires up the stop comboboxes (once), and
-  // applies a previous search if we were given one to restore.
+  // Purpose: Fills the planner form with the available options and applies any query-string prefill values.
   function populateForm(prefill) {
     const startSel = document.getElementById('pl-start');
     const destSel = document.getElementById('pl-dest');
@@ -66,7 +66,7 @@
     renderMissingRouteLink();
   }
 
-  // "Open the form" link — only shows up if a real form URL is configured.
+  // Purpose: Adds a button that opens the missing-route form when a planner result needs it.
   function renderMissingRouteLink() {
     const el = document.getElementById('missing-route-form-link');
     if (!el) return;
@@ -76,11 +76,13 @@
       : '';
   }
 
+  // Purpose: Returns the human-readable locality name for a locality identifier.
   function localityLabel(id) {
     const l = rbLocalityById(id);
     return l ? l.name : id;
   }
 
+  // Purpose: Builds a contact link that carries route context into the assistance form.
   function buildAssistanceLink(category, plan) {
     const params = new URLSearchParams();
     if (category) params.set('category', category);
@@ -91,12 +93,14 @@
   // --- small shared helpers (used to be repeated in several places) ---
 
   // A "student" fare only applies if they're a student AND have a bus pass.
+  // Purpose: Returns the effective passenger type after applying the bus-pass requirement.
   function effectivePassengerType(meta) {
     return (meta.passengerType === 'student' && meta.busPassStatus === 'yes') ? 'student' : 'regular';
   }
 
   // "Arrive by" and "Leave around" searches need different labels for the
   // same two numbers — this used to be four separate ternaries.
+  // Purpose: Returns the localized labels used for the waiting and boarding fields in planner results.
   function modeLabels(mode, L) {
     return mode === 'arrive-by'
       ? { waiting: L === 'fr' ? 'Marge d’arrivée' : 'Arrival buffer', boarding: L === 'fr' ? 'Soyez à votre arrêt avant' : 'Be at your stop by' }
@@ -105,6 +109,7 @@
 
   // Turns a list of connections into <li> items; shared by the result
   // card and the Route 95 overview below, instead of being written twice.
+  // Purpose: Converts connection objects into the HTML list shown in planner results and route sections.
   function connectionsListHtml(connections) {
     const L = lang();
     return connections.map((c) => {
@@ -114,11 +119,13 @@
   }
 
   // Stop list with ALCHE tags — shared by the result card and Route 95 overview.
+  // Purpose: Renders the list of stops for the selected journey result.
   function renderStopList(container, stops) {
     container.innerHTML = stops.map((s) => `<li>${s.name}${s.alche ? ' <span class="tag tag-brand" style="margin-left:6px;">ALCHE</span>' : ''}</li>`).join('')
       || `<li>${lang() === 'fr' ? 'Aucun arrêt intermédiaire recensé.' : 'No intermediate stop recorded.'}</li>`; //Saint-Andre to solitude
   }
 
+  // Purpose: Renders the possible connection options shown beneath a plan result.
   function renderConnections(container, connections) {
     if (!connections || connections.length === 0) {
       container.innerHTML = `<p class="field-hint">${lang() === 'fr' ? 'Aucune correspondance recensée pour cette destination pour le moment.' : 'No connecting route recorded for this destination yet.'}</p>`;
@@ -127,9 +134,7 @@
     container.innerHTML = `<ul style="padding-left:1.1em;">${connectionsListHtml(connections)}</ul>`;
   }
 
-  // Builds the whole result card from a computed plan.
-  //plan contains route result: stops, fare, time delay, etc
-  //meta contains information such as the passenger type.
+  // Purpose: Renders the full planner result card with fare, timing, stops, and action buttons.
   function renderResult(plan, meta) {
     const L = lang();
     const fare = rbFareDisplay(plan.fare, effectivePassengerType(meta), L);
@@ -194,7 +199,7 @@
     return section;
   }
 
-  // Puts a plain-text summary on the clipboard.
+  // Purpose: Copies the current plan summary to the clipboard for easy sharing.
   function copySummary(plan, meta) {
     const L = lang();
     const fare = rbFareDisplay(plan.fare, effectivePassengerType(meta), L);
@@ -221,7 +226,7 @@
     }
   }
 
-  // Smaller object we actually store for a saved route (not the full plan).
+  // Purpose: Converts a computed plan into the shape needed for saved-route storage.
   function routeEntryFromPlan(plan, meta) {
     const fare = rbFareDisplay(plan.fare, effectivePassengerType(meta), lang());
     return {
@@ -233,9 +238,7 @@
     };
   }
 
-  // NOTE: kept English-only on purpose, even though the rest of the file
-  // is bilingual — if you want it bilingual too, wrap the two rbToast
-  // messages the same way the rest of this file does (L === 'fr' ? ... : ...).
+  // Purpose: Saves a route to storage or redirects the user to log in if no profile exists.
   function handleSaveRoute(plan, meta) {
     const profile = RBStorage.getProfile();
     if (!profile) {
@@ -247,6 +250,7 @@
     renderSavedRoutes();
   }
 
+  // Purpose: Displays the user's saved routes in the planner sidebar.
   function renderSavedRoutes() {
     const list = document.getElementById('saved-routes-list');
     const empty = document.getElementById('saved-routes-empty');
@@ -276,6 +280,7 @@
     });
   }
 
+  // Purpose: Adds a new recent search entry to session storage and refreshes the list.
   function pushRecentSearch(entry) {
     const list = RBStorage.readSession('routebackRecentSearches', []);
     list.unshift(entry);
@@ -283,6 +288,7 @@
     renderRecentSearches();
   }
 
+  // Purpose: Renders the recent searches panel so users can reopen prior searches quickly.
   function renderRecentSearches() {
     const list = RBStorage.readSession('routebackRecentSearches', []);
     const container = document.getElementById('recent-searches-list');
@@ -305,8 +311,7 @@
     });
   }
 
-  // Static Route 95 info — reuses renderStopList()/connectionsListHtml()
-  // instead of rebuilding the same HTML a second time.
+  // Purpose: Builds the Route 95 overview and the accordion of route connections for the planner page.
   function renderRoute95Overview() {
     renderStopList(document.getElementById('route95-stop-list'), RB_STOPS.slice().sort((a, b) => a.order - b.order));
 
@@ -326,6 +331,7 @@
     rbInitAccordions(acc);
   }
 
+  // Purpose: Handles the planner form submission and computes the trip result.
   function handleSubmit(e) {
     e.preventDefault();
     const start = document.getElementById('pl-start').value;
@@ -375,6 +381,7 @@
     section.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
+  // Purpose: Initializes the planner page after the shared partials have finished loading.
   function init() {
     const params = new URLSearchParams(window.location.search);
     const prefill = {
@@ -413,8 +420,10 @@
 // Northern Journey Guide — the "Beyond Route 95" section. Data lives in
 // shared/js/data.js (RB_NORTHERN_GUIDE). Doesn't touch the search form at all.
 (function () {
+  // Purpose: Returns the active language for the Northern Journey Guide.
   function L() { return rbCurrentLang(); }
 
+  // Purpose: Builds the HTML for one origin card in the guide detail panel.
   function originCardHtml(label, leg) {
     const lang = L();
     return `
@@ -428,6 +437,7 @@
     `;
   }
 
+  // Purpose: Renders the selected destination detail into the guide panel.
   function renderDetail(entry) {
     const lang = L();
     document.getElementById('guide-detail-title').textContent = entry.destination;
@@ -437,7 +447,7 @@
     document.getElementById('guide-detail').classList.add('is-visible');
   }
 
-  // Clickable destination chips; clicking one shows its detail via renderDetail().
+  // Purpose: Creates the clickable destination chips for the Northern Journey Guide.
   function renderChips() {
     const container = document.getElementById('guide-chips');
     if (!container) return;
@@ -451,7 +461,7 @@
     });
   }
 
-  // Three highlighted "fare ticket" cards for popular destinations.
+  // Purpose: Renders the highlighted fare ticket cards for the guide section.
   function renderFareTickets() {
     const container = document.getElementById('guide-fare-tickets');
     if (!container) return;
@@ -474,7 +484,7 @@
     }).join('');
   }
 
-  // The full 26-row reference table.
+  // Purpose: Builds the destination comparison table for the Northern Journey Guide.
   function renderTable() {
     const body = document.getElementById('guide-table-body');
     if (!body) return;
@@ -487,6 +497,7 @@
     `).join('');
   }
 
+  // Purpose: Renders the complete Northern Journey Guide experience on the planner page.
   function render() {
     renderFareTickets();
     renderChips();

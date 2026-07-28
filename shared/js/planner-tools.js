@@ -23,7 +23,7 @@ const RB_BUS_PASS_STATUS = [
   { id: 'no', en: 'No, not yet', fr: 'Non, pas encore' },
 ];
  
-// Every half-hour slot from 05:00 to 20:00, e.g. ["05:00","05:30",...].
+// Purpose: Builds the list of available time slots used by the planner dropdowns.
 function rbTimeSlots() {
   const slots = [];
   for (let h = 5; h <= 20; h++) {
@@ -35,18 +35,17 @@ function rbTimeSlots() {
   return slots;
 }
  
-// Current site language ('en' or 'fr'); falls back to English if
-// i18n.js hasn't loaded yet.
+// Purpose: Returns the current language from the shared i18n helper.
 function rbCurrentLang() {
   return (typeof rbGetLang === 'function') ? rbGetLang() : 'en';
 }
  
-// Empties a <select> so it can be refilled from scratch.
+// Purpose: Removes all options from a select element so it can be repopulated.
 function rbClearSelect(select) {
   while (select.options.length) select.remove(0);
 }
  
-// Adds a greyed-out "Choose..." option as the first item in a dropdown.
+// Purpose: Adds a disabled placeholder option to a select element.
 function rbAddPlaceholderOption(select, text) {
   const placeholder = document.createElement('option');
   placeholder.value = '';
@@ -74,8 +73,7 @@ function rbFillJourneyModeSelect(select) { rbFillOptionListSelect(select, RB_JOU
 function rbFillPassengerSelect(select) { rbFillOptionListSelect(select, RB_PASSENGER_TYPES); }
 function rbFillBusPassSelect(select) { rbFillOptionListSelect(select, RB_BUS_PASS_STATUS); }
  
-// Fills the "starting area" / "destination area" dropdown from
-// RB_LOCALITIES (in shared/js/data.js). Sorted by .order, not name.
+// Purpose: Fills a locality select with the localities used by the planner and forms.
 function rbFillLocalitySelect(select, placeholderEn, placeholderFr) {
   const lang = rbCurrentLang();
   rbClearSelect(select);
@@ -89,8 +87,7 @@ function rbFillLocalitySelect(select, placeholderEn, placeholderFr) {
   });
 }
  
-// Fills the time dropdown. Pass null for both placeholder args if this
-// dropdown shouldn't have a "Choose a time..." option.
+// Purpose: Populates the time select with the available departure/arrival times.
 function rbFillTimeSelect(select, placeholderEn, placeholderFr) {
   const lang = rbCurrentLang();
   rbClearSelect(select);
@@ -104,7 +101,7 @@ function rbFillTimeSelect(select, placeholderEn, placeholderFr) {
   });
 }
  
-// Works out what fare text/colour to show for this passenger type.
+// Purpose: Formats fare information into a display-friendly object for planner results.
 function rbFareDisplay(fare, passengerType, lang) {
   if (!fare) {
     // No confirmed price yet — say so honestly instead of guessing.
@@ -126,10 +123,7 @@ function rbFareDisplay(fare, passengerType, lang) {
     status: fare.verificationStatus === 'pending' ? 'warning' : 'success',
   };
 }
-// Searchable stop combobox (source: shared/js/stop-search.js)
-// Swaps a plain <select id="X"> for a text-search box, but keeps a
-// hidden input with the same id, so document.getElementById('X').value
-// still works everywhere else exactly like before.
+// Purpose: Replaces a plain select with a searchable stop combobox while preserving the original field API.
 function rbReplaceSelectWithStopCombobox(selectId, opts) {
   const options = opts || {};
   const select = document.getElementById(selectId);
@@ -187,14 +181,16 @@ function rbReplaceSelectWithStopCombobox(selectId, opts) {
   let currentOptionEls = [];  // the result <div>s currently on screen
   let currentEntries = [];    // the stop data behind those <div>s
  
+  // Purpose: Returns the active language for the combobox UI.
   function lang() { return rbCurrentLang(); }
- 
+
+  // Purpose: Converts a stop status code into a localized label for the combobox UI.
   function statusLabel(status) {
     const l = RB_STOP_STATUS_LABEL[status];
     return l ? (lang() === 'fr' ? l.fr : l.en) : '';
   }
  
-  // If paired with an area dropdown, that area's stops are shown first.
+  // Purpose: Returns the selected preferred area name for reordering combobox results.
   function preferredAreaName() {
     if (!options.areaFieldId) return null;
     const areaEl = document.getElementById(options.areaFieldId);
@@ -203,7 +199,7 @@ function rbReplaceSelectWithStopCombobox(selectId, opts) {
     return loc ? loc.name : null;
   }
  
-  // Stores the chosen stop and tells everyone listening.
+  // Purpose: Sets the selected stop value in the hidden field and updates the visible search input.
   function setValue(entry) {
     hidden.value = entry ? entry.id : '';
     searchInput.value = entry ? `${entry.name}${entry.kind === 'area' ? '' : ` (${entry.area})`}` : '';
@@ -211,7 +207,7 @@ function rbReplaceSelectWithStopCombobox(selectId, opts) {
     if (typeof options.onSelect === 'function') options.onSelect(entry);
   }
  
-  // No matches — show a message, plus a "suggest this" link if we can.
+  // Purpose: Renders the empty-state message when no stops match the search query.
   function renderEmpty(query) {
     const L = lang();
     const suggestHref = typeof options.missingStopLink === 'function' ? options.missingStopLink(query) : null;
@@ -224,7 +220,7 @@ function rbReplaceSelectWithStopCombobox(selectId, opts) {
     activeIndex = -1;
   }
  
-  // Draws matching stops, grouped by area.
+  // Purpose: Renders the matching stop results grouped by area.
   function renderGroups(groups, query) {
     const L = lang();
     const totalCount = groups.reduce((sum, g) => sum + g.items.length, 0);
@@ -257,24 +253,27 @@ function rbReplaceSelectWithStopCombobox(selectId, opts) {
     });
   }
  
+  // Purpose: Searches the stop catalogue and renders the matching results into the combobox list.
   function renderResults(query) {
     const results = rbSearchStops(query, preferredAreaName());
     results.length === 0 ? renderEmpty(query.trim()) : renderGroups(rbGroupStopsByArea(results), query);
   }
  
+  // Purpose: Opens the combobox dropdown and refreshes its visible results.
   function openListbox() {
     listbox.hidden = false;
     searchInput.setAttribute('aria-expanded', 'true');
     renderResults(searchInput.value);
   }
  
+  // Purpose: Closes the combobox dropdown and clears the active highlight.
   function closeListbox() {
     listbox.hidden = true;
     searchInput.setAttribute('aria-expanded', 'false');
     activeIndex = -1;
   }
  
-  // Moves the keyboard highlight up/down (delta is +1 or -1).
+  // Purpose: Moves the keyboard selection highlight through the combobox options.
   function moveActive(delta) {
     if (!currentOptionEls.length) return;
     currentOptionEls.forEach((el) => el.classList.remove('is-active'));

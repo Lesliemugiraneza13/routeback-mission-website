@@ -8,6 +8,7 @@
  * Also includes the "redirect back to Planner and restore a pending save"
  * flow used after opening or creating a profile.
  */
+// Purpose: Adds click handlers to password toggle buttons so users can show or hide their password input.
 function rbTogglePasswordVisibility(root = document) {
   root.querySelectorAll('.password-toggle').forEach((btn) => {
     if (btn._rbBound) return;
@@ -38,6 +39,7 @@ function rbTogglePasswordVisibility(root = document) {
  *   $                 end of the string
  * The phone field is optional on our forms, so a blank value passes too.
  */
+// Purpose: Validates Mauritius phone numbers with a regular expression that accepts the local format.
 function rbValidMauritiusPhone(value) {
   const v = value.trim();
   if (v === '') return true; // optional field
@@ -57,6 +59,7 @@ function rbValidMauritiusPhone(value) {
  * This is a simple, readable check, not the full email specification —
  * good enough to catch obvious typos without being overly strict.
  */
+// Purpose: Checks that an entered email follows a simple, common format.
 function rbValidEmail(value) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim());
 }
@@ -76,6 +79,7 @@ function rbValidEmail(value) {
  * (multiple letter-groups joined by a space, dash or apostrophe), while
  * rejecting numbers, symbols, or a single stray letter.
  */
+// Purpose: Validates names so they contain only letters and common name separators.
 const RB_NAME_REGEX = /^[A-Za-zÀ-ÖØ-öø-ÿ]{2,30}(?:[ '-][A-Za-zÀ-ÖØ-öø-ÿ]{2,30}){0,3}$/;
 function rbValidName(value) { return RB_NAME_REGEX.test(value.trim()); }
 
@@ -96,6 +100,7 @@ function rbValidName(value) { return RB_NAME_REGEX.test(value.trim()); }
  * The four lookaheads are how one regex enforces four separate rules
  * (upper, lower, number, special character) at once.
  */
+// Purpose: Checks password strength against several required rules, including uppercase, lowercase, numbers, and special characters.
 const RB_PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9\s])\S{8,64}$/;
 function rbPasswordChecklist(value) {
   return {
@@ -117,6 +122,7 @@ function rbValidPassword(value) { return RB_PASSWORD_REGEX.test(value); }
  * The field is optional, so a blank value passes too. The input auto-uppercases as you
  * type (see the Contact page's own script below), so typing lowercase still matches.
  */
+// Purpose: Validates the optional reference code used on the contact form.
 function rbValidReferenceCode(value) {
   const v = value.trim();
   if (v === '') return true;
@@ -129,6 +135,7 @@ function rbValidReferenceCode(value) {
  * failures as a plain array. Kept separate from rbShowErrorSummary so a caller (like
  * signup's acknowledgement checkbox) can push extra errors before the summary renders.
  */
+// Purpose: Applies the validation results to each field and collects any failing fields into an error list.
 function rbApplyFieldChecks(checks) {
   const errors = [];
   checks.forEach(([input, ok, id, msgEn, msgFr]) => {
@@ -139,6 +146,7 @@ function rbApplyFieldChecks(checks) {
 }
 
 /** Fills an error-summary list from `errors`, focuses the first failing field, and reports whether the form is valid. */
+// Purpose: Displays the collected form errors in a summary and moves focus to the first invalid field.
 function rbShowErrorSummary(errors, summaryId, listId) {
   const lang = rbCurrentLang();
   const summary = document.getElementById(summaryId);

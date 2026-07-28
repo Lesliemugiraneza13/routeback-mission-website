@@ -4,6 +4,7 @@
 (function () {
   let startStopCombo = null;
 
+  // Purpose: Renders the services strip shown on the home page using provider data.
   function renderServicesStrip() {
     const strip = document.getElementById('services-strip');
     if (!strip) return;
@@ -15,6 +16,7 @@
     `).join('');
   }
 
+  // Purpose: Updates the quick-planner time label so it matches the selected travel mode.
   function updateQpTimeLabel() {
     const modeSel = document.getElementById('qp-mode');
     const label = document.getElementById('qp-time-label');
@@ -25,6 +27,7 @@
       : '<span lang="en" data-i18n>Leave around</span><span lang="fr" data-i18n>Partir vers</span>';
   }
 
+  // Purpose: Fills the quick planner form with the available options and wires up the stop combobox.
   function populateQuickPlanner() {
     const startSel = document.getElementById('qp-start');
     const destSel = document.getElementById('qp-dest');
@@ -48,6 +51,7 @@
     }
   }
 
+  // Purpose: Handles submission of the quick planner form and redirects to the full planner page.
   function initQuickPlanner() {
     const form = document.getElementById('quick-planner-form');
     if (!form) return;

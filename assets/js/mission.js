@@ -6,4 +6,6 @@
  * nav, reveal-on-scroll, header/footer). This file exists so Mission has a
  * clear, dedicated place to add page-specific behaviour later, without
  * anyone having to restructure the script tags again.
+ *
+ * Purpose: Provides a placeholder script file for future mission-specific behavior.
  */

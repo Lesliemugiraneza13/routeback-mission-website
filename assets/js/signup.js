@@ -3,14 +3,17 @@
  */
 (function () {
   let stopCombo = null;
+  // Purpose: Returns the active language so page text can be localized.
   function L() { return rbCurrentLang(); }
 
+  // Purpose: Updates language-specific option labels on static selects.
   function localizeStaticOptions() {
     document.querySelectorAll('#su-pass option').forEach((opt) => {
       opt.textContent = L() === 'fr' ? opt.getAttribute('data-fr') : opt.getAttribute('data-en');
     });
   }
 
+  // Purpose: Populates the create-profile form fields and creates the stop combobox.
   function populateSelects(prefillArea) {
     const areaSel = document.getElementById('su-area');
     rbFillLocalitySelect(areaSel, 'Choose a starting area', 'Choisissez une zone de départ');
@@ -28,6 +31,7 @@
     localizeStaticOptions();
   }
 
+  // Purpose: Validates the create-profile form and collects any errors to display.
   function validate() {
     const first = document.getElementById('su-first');
     const last = document.getElementById('su-last');
@@ -59,6 +63,7 @@
     return rbShowErrorSummary(errors, 'error-summary', 'error-summary-list');
   }
 
+  // Purpose: Updates the password strength checklist as the user types.
   function updatePasswordChecklist() {
     const value = document.getElementById('su-password').value;
     const results = rbPasswordChecklist(value);
@@ -74,12 +79,14 @@
 
   let duplicateBlocked = false;
 
+  // Purpose: Keeps the pending-save query parameter attached to relevant links.
   function preservePendingParam(link) {
     if (!link) return;
     const pending = new URLSearchParams(window.location.search).get('pending');
     if (pending) link.href = `${link.getAttribute('href')}?pending=${encodeURIComponent(pending)}`;
   }
 
+  // Purpose: Prevents duplicate profile creation and offers the user a replacement path.
   function setupDuplicateProfileGuard() {
     if (!RBStorage.getProfile()) return;
     duplicateBlocked = true;
@@ -107,6 +114,7 @@
     }, { once: true });
   }
 
+  // Purpose: Initializes validation, password checklist behavior, and profile creation submission.
   function init() {
     populateSelects();
     setupDuplicateProfileGuard();

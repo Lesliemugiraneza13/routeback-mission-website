@@ -2,6 +2,7 @@
  * RouteBack, Services page: renders the provider directory from RB_PROVIDERS.
  */
 (function () {
+  // Purpose: Returns the active language so service links can be localized.
   function L() { return rbCurrentLang(); }
 
   const LINK_LABELS = {
@@ -19,6 +20,7 @@
   };
   const LINK_ORDER = ['website', 'bookingUrl', 'quoteUrl', 'appUrl', 'signinUrl', 'registerUrl', 'airportUrl', 'contactUrl', 'newsroomUrl', 'mUrl', 'frUrl'];
 
+  // Purpose: Renders the provider directory cards with links and availability notes.
   function renderProviders() {
     const grid = document.getElementById('providers-grid');
     const lang = L();

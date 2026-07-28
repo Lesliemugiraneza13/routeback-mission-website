@@ -2,8 +2,10 @@
  * RouteBack, Open Profile page logic.
  */
 (function () {
+  // Purpose: Returns the active language so page text can be localized.
   function L() { return rbCurrentLang(); }
 
+  // Purpose: Adds a pending-save parameter to links when the user is returning to log in after a saved plan.
   function appendPendingParam(root) {
     const params = new URLSearchParams(window.location.search);
     if (params.get('pending') !== '1') return;
@@ -13,6 +15,7 @@
     });
   }
 
+  // Purpose: Checks whether a local profile exists and shows or hides the login form accordingly.
   function checkProfileExists() {
     const profile = RBStorage.getProfile();
     const notice = document.getElementById('no-profile-notice');
@@ -27,6 +30,7 @@
     return profile;
   }
 
+  // Purpose: Shows a message when the entered email does not match the stored local profile.
   function showMismatch() {
     const notice = document.getElementById('no-profile-notice');
     const lang = L();
@@ -35,6 +39,7 @@
     notice.style.display = 'flex';
   }
 
+  // Purpose: Sets up the login form submission flow and session creation.
   function init() {
     const root = '';
     appendPendingParam(root);

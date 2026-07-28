@@ -2,6 +2,7 @@
  * RouteBack, header behaviour: mobile menu open/close and active-link marking.
  */
 (function () {
+  // Purpose: Marks the current page link as active in both the desktop and mobile navigation.
   function markActive() {
     const page = document.body.getAttribute('data-page');
     if (!page) return;
@@ -14,6 +15,7 @@
     });
   }
 
+  // Purpose: Opens and closes the mobile menu and keeps its accessibility state in sync.
   function initMobileMenu() {
     const toggle = document.querySelector('[data-menu-toggle]');
     const menu = document.querySelector('[data-mobile-menu]');
@@ -51,6 +53,7 @@
     });
   }
 
+  // Purpose: Initializes the navigation behavior once the shared header has been injected.
   function init() {
     markActive();
     initMobileMenu();

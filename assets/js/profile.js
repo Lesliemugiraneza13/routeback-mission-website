@@ -3,19 +3,23 @@
  */
 (function () {
   let stopCombo = null;
+  // Purpose: Returns the active language so profile text can be localized.
   function L() { return rbCurrentLang(); }
 
+  // Purpose: Formats dates in the correct locale for the profile view.
   function localeDate(iso) {
     if (!iso) return '-';
     return new Date(iso).toLocaleDateString(L() === 'fr' ? 'fr-FR' : 'en-GB');
   }
 
+  // Purpose: Updates language-specific option labels in the profile form.
   function localizeStaticOptions(root) {
     root.querySelectorAll('option[data-en]').forEach((opt) => {
       opt.textContent = L() === 'fr' ? opt.getAttribute('data-fr') : opt.getAttribute('data-en');
     });
   }
 
+  // Purpose: Renders the profile summary and saved-route counts for the current user.
   function renderProfile() {
     const profile = RBStorage.getProfile();
     const session = RBStorage.getSession();
@@ -57,6 +61,7 @@
     return true;
   }
 
+  // Purpose: Fills the edit-profile form with the current saved profile values.
   function populateEditForm() {
     const profile = RBStorage.getProfile();
     if (!profile) return;
@@ -87,6 +92,7 @@
     passSel.value = profile.busPass || 'no';
   }
 
+  // Purpose: Validates the edit-profile form and reports any invalid fields.
   function validateEdit() {
     const first = document.getElementById('ep-first');
     const last = document.getElementById('ep-last');
@@ -108,11 +114,13 @@
     return rbShowErrorSummary(errors, 'edit-error-summary', 'edit-error-summary-list');
   }
 
+  // Purpose: Shows or hides the edit-profile form and repopulates it when needed.
   function toggleEditForm(show) {
     document.getElementById('edit-profile-form').hidden = !show;
     if (show) populateEditForm();
   }
 
+  // Purpose: Wires up the edit, save, cancel, and submit behavior for the profile form.
   function initEditFlow() {
     document.getElementById('edit-profile-toggle').addEventListener('click', (e) => {
       e.preventDefault();
@@ -149,6 +157,7 @@
     });
   }
 
+  // Purpose: Logs the user out while keeping the local profile saved on the device.
   function initLogout() {
     document.getElementById('logout-btn').addEventListener('click', () => {
       RBStorage.logout();
@@ -158,6 +167,7 @@
     });
   }
 
+  // Purpose: Opens the delete confirmation modal and removes the local profile when confirmed.
   function initDelete() {
     document.getElementById('delete-profile-btn').addEventListener('click', () => rbOpenModal('delete-profile-modal'));
     document.getElementById('delete-profile-cancel').addEventListener('click', () => rbCloseModal('delete-profile-modal'));
@@ -170,6 +180,7 @@
     });
   }
 
+  // Purpose: Clears the recent searches saved in session storage for this profile view.
   function initClearRecent() {
     document.getElementById('clear-recent-btn').addEventListener('click', () => {
       RBStorage.removeSession('routebackRecentSearches');
@@ -178,6 +189,7 @@
     });
   }
 
+  // Purpose: Initializes the profile page after the shared partials have finished loading.
   function init() {
     const hasSession = renderProfile();
     if (!hasSession) return;

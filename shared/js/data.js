@@ -26,12 +26,14 @@ const RB_DELAY_BANDS = {
   high: { minPct: 0.16, maxPct: 0.22, label: { en: 'High', fr: 'Élevé' } },
 };
 
+// Purpose: Converts a HH:MM time string into minutes so scheduling logic can be compared numerically.
 function rbTimeToMinutes(hhmm) {
   const [h, m] = hhmm.split(':').map(Number);
   return h * 60 + m;
 }
 
 /** Base band from day type and time of day. */
+// Purpose: Chooses the base delay band for a given day type and time of day.
 function rbBaseBand(dayType, timeMinutes) {
   if (dayType === 'sun-ph') {
     if (timeMinutes < 9 * 60) return 'low';
@@ -57,12 +59,14 @@ function rbBaseBand(dayType, timeMinutes) {
 }
 
 const BAND_ORDER = ['low', 'moderate', 'high'];
+// Purpose: Moves a delay band up or down a small number of steps to reflect increasing congestion.
 function rbBumpBand(band, steps) {
   const idx = Math.max(0, Math.min(BAND_ORDER.length - 1, BAND_ORDER.indexOf(band) + steps));
   return BAND_ORDER[idx];
 }
 
 /** Northern-locality modifiers, applied on top of the time-of-day band. */
+// Purpose: Applies locality-specific modifiers that increase or decrease the expected delay for certain places.
 function rbLocalityModifier(localityId, dayType, timeMinutes) {
   const weekend = dayType !== 'weekday';
   const coastal = ['grand-baie', 'pereybere', 'cap-malheureux', 'mont-choisy', 'trou-aux-biches', 'pointe-aux-canonniers'];
@@ -83,6 +87,7 @@ function rbLocalityModifier(localityId, dayType, timeMinutes) {
  * @param {number} p.baseDurationMinutes
  * @param {number} p.stopCount
  */
+// Purpose: Estimates a planning delay range for a trip using the shared delay model.
 function rbEstimateDelay({ dayType, time, originLocality, destLocality, baseDurationMinutes, stopCount }) {
   const minutes = rbTimeToMinutes(time || '08:00');
   let band = rbBaseBand(dayType, minutes);
@@ -172,6 +177,7 @@ const RB_STOPS = [
 ];
 
 /** Build a departure list at an assumed headway between a first and last time. */
+// Purpose: Builds an assumed departure timetable between a first and last bus time.
 function rbBuildDepartures(first, last, headwayMinutes) {
   const toMin = (t) => { const [h, m] = t.split(':').map(Number); return h * 60 + m; };
   const toStr = (mins) => `${String(Math.floor(mins / 60)).padStart(2, '0')}:${String(mins % 60).padStart(2, '0')}`;
@@ -275,6 +281,7 @@ function rbStopById(id) { return RB_STOPS.find((s) => s.id === id); }
 function rbStopsForLocality(localityId) { return RB_STOPS.filter((s) => s.locality === localityId).sort((a, b) => a.order - b.order); }
 
 /** Which direction connects a start and destination locality. */
+// Purpose: Returns the route direction key that matches the selected origin and destination localities.
 function rbDirectionFor(startLocality, destLocality) {
   const start = rbLocalityById(startLocality);
   const dest = rbLocalityById(destLocality);
@@ -284,6 +291,8 @@ function rbDirectionFor(startLocality, destLocality) {
 
 /** Cumulative-minute offset for a locality in a given direction, from its stops
  *  if any exist, otherwise interpolated from its position along the route. */
+// Purpose: Looks up the cumulative offset for a locality along a chosen direction.
+// Purpose: Looks up the cumulative offset for a locality along a chosen direction.
 function rbLocalityOffset(localityId, directionKey) {
   const stops = rbStopsForLocality(localityId);
   const dir = RB_ROUTE_95.directions[directionKey];
@@ -298,28 +307,37 @@ function rbLocalityOffset(localityId, directionKey) {
   return Math.round(fraction * dir.totalDurationMinutes);
 }
 
+// Purpose: Looks up the cumulative offset for a stop along a chosen direction.
+// Purpose: Looks up the cumulative offset for a stop along a chosen direction.
 function rbStopOffset(stopId, directionKey) {
   const stop = rbStopById(stopId);
   if (!stop) return null;
   return stop.offsets[directionKey === 'toward-saint-antoine' ? 'outbound' : 'inbound'];
 }
 
+// Purpose: Returns the last bus time for a given direction and day type.
+// Purpose: Returns the last bus time for a given direction and day type.
 function rbDayTypeLastBus(directionKey, dayType) {
   const dir = RB_ROUTE_95.directions[directionKey];
   const key = dayType === 'sun-ph' ? 'sun-ph' : (dayType === 'saturday' ? 'saturday' : 'weekday');
   return dir.last[key];
 }
 
+// Purpose: Builds the departure list for a chosen direction and day type.
+// Purpose: Builds the departure list for a chosen direction and day type.
 function rbDeparturesForDirection(directionKey, dayType) {
   const dir = RB_ROUTE_95.directions[directionKey];
   const last = rbDayTypeLastBus(directionKey, dayType);
   return rbBuildDepartures(dir.first, last, RB_ROUTE_95.timetable.headwayMinutesAssumed);
 }
 
+// Purpose: Converts minutes into a HH:MM time string for display.
+// Purpose: Converts minutes into a HH:MM time string for display.
 function rbMinutesToTime(mins) {
   const wrapped = ((mins % 1440) + 1440) % 1440;
   return `${String(Math.floor(wrapped / 60)).padStart(2, '0')}:${String(wrapped % 60).padStart(2, '0')}`;
 }
+// Purpose: Converts a HH:MM string into minutes so the planner can compare times numerically.
 function rbTimeToMin(t) { const [h, m] = t.split(':').map(Number); return h * 60 + m; }
 
 /**
@@ -327,6 +345,7 @@ function rbTimeToMin(t) { const [h, m] = t.split(':').map(Number); return h * 60
  * startLocality/destLocality are required; startStopId/destStopId are optional
  * (fall back to the locality-level offset when not given).
  */
+// Purpose: Computes the main journey plan and related meta data for the planner results.
 function rbComputePlan({ startLocality, destLocality, startStopId, destStopId, dayType, mode, time, passengerType }) {
   const directionKey = rbDirectionFor(startLocality, destLocality);
   if (!directionKey) return null;
@@ -441,6 +460,7 @@ const RB_STOP_STATUS_LABEL = {
   'needs-verification': { en: 'Needs verification', fr: 'Vérification requise' },
 };
 
+// Purpose: Converts a label into a URL-safe slug for route or section identifiers.
 function rbSlugify(text) {
   return text.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
 }
@@ -468,6 +488,7 @@ const RB_STOP_CATALOGUE = RB_STOP_CATALOGUE_AREAS.map((area) => {
   };
 });
 
+// Purpose: Returns the catalogue entry for a requested area.
 function rbStopCatalogueByArea(area) { return RB_STOP_CATALOGUE.find((s) => s.area === area); }
 
 /**
@@ -517,6 +538,7 @@ const RB_ALL_STOPS_INDEX = (function build() {
   return entries;
 })();
 
+// Purpose: Returns the list of area names that appear in the stop catalogue.
 function rbAllAreaNames() {
   return Array.from(new Set(RB_ALL_STOPS_INDEX.map((e) => e.area))).sort((a, b) => a.localeCompare(b));
 }
@@ -525,6 +547,7 @@ function rbAllAreaNames() {
  * Rank a single entry against a lowercase query. Higher is better; null means
  * "does not match at all" (only these are excluded from results).
  */
+// Purpose: Scores a stop entry against a search query so the best matches appear first.
 function rbMatchRank(entry, query) {
   if (!query) return 4; // no search text yet, default listing order
   const name = entry.name.toLowerCase();
@@ -542,6 +565,7 @@ function rbMatchRank(entry, query) {
  * Search the full catalogue. Never removes a valid match because of the
  * optional preferredArea, it only sorts that area's group first.
  */
+// Purpose: Searches the Northern stop catalogue for entries that match the current query.
 function rbSearchStops(query, preferredArea) {
   const q = (query || '').trim().toLowerCase();
   const ranked = [];
@@ -564,6 +588,7 @@ function rbSearchStops(query, preferredArea) {
 }
 
 /** Group an already-sorted result list by area, preserving first-seen order. */
+// Purpose: Groups stop-search results by area so the combobox can display them clearly.
 function rbGroupStopsByArea(list) {
   const groups = [];
   const index = new Map();
@@ -577,6 +602,7 @@ function rbGroupStopsByArea(list) {
   return groups;
 }
 
+// Purpose: Finds a stop entry by its identifier in the full searchable catalogue index.
 function rbStopEntryById(id) { return RB_ALL_STOPS_INDEX.find((e) => e.id === id) || null; }
 
 /* ===== source: shared/data/routes-catalogue.js ===== */
@@ -633,6 +659,7 @@ const RB_ROUTE_STATUS_LABEL = {
   'needs-fare-verification': { en: 'Needs fare verification', fr: 'Vérification du tarif requise' },
 };
 
+// Purpose: Returns the route catalogue entry for a given route number.
 function rbRouteCatalogueEntry(number) { return RB_ROUTE_CATALOGUE.find((r) => r.number === number); }
 
 /* ===== source: shared/data/providers.js ===== */
@@ -883,6 +910,7 @@ const RB_ASSISTANCE_CATEGORIES = [
   { id: 'question', en: 'General question', fr: 'Question générale' },
 ];
 
+// Purpose: Returns the assistance category definition for a given category identifier.
 function rbAssistanceCategoryById(id) { return RB_ASSISTANCE_CATEGORIES.find((c) => c.id === id); }
 
 /* ===== Northern Mauritius Bus Guide (compiled planning reference) =====
@@ -900,6 +928,7 @@ const RB_NORTHERN_GUIDE_SOURCE = {
   },
 };
 
+// Purpose: Builds a guide-leg object from route timing and fare information.
 function rbGuideLeg(routeText, durationMin, durationMax, fareMin, fareMax, transfer) {
   return { routeText, durationMin, durationMax, fareMin, fareMax, transfer };
 }
@@ -933,8 +962,11 @@ const RB_NORTHERN_GUIDE = [
   { destination: 'Plaine des Roches', fromPortLouis: rbGuideLeg('23 to R. du Rempart, then feeder bus', 65, 75, 40, 40, true), fromSSRN: rbGuideLeg('23 to R. du Rempart, then feeder bus', 50, 55, 27, 30, true) },
 ];
 
+// Purpose: Returns the Northern Guide entry for a requested destination.
 function rbNorthernGuideEntry(destination) { return RB_NORTHERN_GUIDE.find((e) => e.destination === destination); }
+// Purpose: Formats a duration range so it is easy to read in the guide table.
 function rbFormatGuideRange(min, max, unit) { return min === max ? `${min}${unit}` : `${min}–${max}${unit}`; }
+// Purpose: Formats a fare range into a human-friendly display string for the guide.
 function rbFormatGuideFare(min, max) {
   if (min === 0 && max > 0) return `Free – Rs ${max}`;
   return min === max ? `Rs ${min}` : `Rs ${min}–${max}`;

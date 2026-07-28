@@ -3,6 +3,7 @@
  * validation, review preview, copy / JSON download / local save / clear.
  */
 (function () {
+  // Purpose: Returns the currently active language for page-specific UI text.
   function L() { return rbCurrentLang(); }
 
   const DIRECTION_OPTIONS = [
@@ -10,6 +11,7 @@
     { id: 'toward-pamplemousses', en: 'Towards Pamplemousses', fr: 'Vers Pamplemousses' },
   ];
 
+  // Purpose: Fills the assistance category dropdown with the correct bilingual labels.
   function renderCategorySelect(selected) {
     const select = document.getElementById('category-select');
     const lang = L();
@@ -17,6 +19,7 @@
       RB_ASSISTANCE_CATEGORIES.map((c) => `<option value="${c.id}" ${c.id === selected ? 'selected' : ''}>${lang === 'fr' ? c.fr : c.en}</option>`).join('');
   }
 
+  // Purpose: Shows only the fields relevant to the selected assistance category.
   function showConditional(categoryId) {
     document.querySelectorAll('.conditional-block').forEach((el) => {
       el.classList.toggle('is-active', el.getAttribute('data-cond') === categoryId);
@@ -42,6 +45,7 @@
       `<option value="other">${lang === 'fr' ? 'Autre / non listé' : 'Other / not listed'}</option>`;
   }
 
+  // Purpose: Populates the supporting dropdowns and option lists used by the contact form.
   function populateSupportingSelects() {
     rbFillLocalitySelect(document.getElementById('mr-from'), 'Choose an area', 'Choisissez une zone');
     rbFillLocalitySelect(document.getElementById('mr-to'), 'Choose a destination', 'Choisissez une destination');
@@ -64,10 +68,12 @@
     });
   }
 
+  // Purpose: Returns the currently selected assistance category.
   function selectedCategory() {
     return document.getElementById('category-select').value;
   }
 
+  // Purpose: Collects the current form values into a plain object for review or submission.
   function collectFormData() {
     const cat = selectedCategory();
     const data = { category: cat, submittedAt: new Date().toISOString() };
@@ -129,6 +135,7 @@
   function directionLabel(id, lang) { const d = DIRECTION_LABEL_BY_ID[id]; return d ? (lang === 'fr' ? d.fr : d.en) : id; }
 
   /** Turn the collected form data into plain-language rows, never raw field names or JSON. */
+  // Purpose: Converts the collected form data into readable review rows for the preview area.
   function buildReviewRows(data, lang) {
     const rows = [];
     const catLabel = rbAssistanceCategoryById(data.category);
@@ -156,6 +163,7 @@
     return rows;
   }
 
+  // Purpose: Refreshes the review preview whenever the form content changes.
   function updateReview() {
     const data = collectFormData();
     const lang = L();
@@ -166,6 +174,7 @@
     ).join('') || `<p class="field-hint" style="margin:0;">${lang === 'fr' ? 'Choisissez un motif pour voir un résumé ici.' : 'Choose a reason to see a summary here.'}</p>`;
   }
 
+  // Purpose: Validates the form and returns whether it is ready to be submitted.
   function validate() {
     const cat = selectedCategory();
     document.getElementById('category-error').style.display = cat ? 'none' : 'flex';
@@ -185,6 +194,7 @@
     return rbShowErrorSummary(errors, 'error-summary', 'error-summary-list');
   }
 
+  // Purpose: Copies the review text into the clipboard for sharing or saving.
   function copyToClipboard() {
     if (!validate()) return;
     updateReview();
@@ -198,12 +208,14 @@
     }
   }
 
+  // Purpose: Saves a local copy of the submitted assistance report for later reference.
   function saveLocally(data) {
     const list = RBStorage.readLocal('routebackAssistanceSubmissions', []);
     list.unshift(data);
     RBStorage.writeLocal('routebackAssistanceSubmissions', list.slice(0, 25));
   }
 
+  // Purpose: Resets the form and clears the visible review and error state.
   function clearForm() {
     document.getElementById('assistance-form').reset();
     document.getElementById('category-select').selectedIndex = 0;
@@ -214,6 +226,7 @@
     document.getElementById('review-box').textContent = '';
   }
 
+  // Purpose: Prefills the form from URL parameters when the page is opened from another flow.
   function prefillFromQuery() {
     const params = new URLSearchParams(window.location.search);
     const category = params.get('category');
@@ -241,6 +254,7 @@
     }
   }
 
+  // Purpose: Sets up event listeners and initializes the contact form experience.
   function init() {
     renderCategorySelect('');
     populateSupportingSelects();

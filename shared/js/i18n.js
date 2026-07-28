@@ -9,10 +9,12 @@
  */
 const RB_LANG_KEY = 'routebackLang';
 
+// Purpose: Reads the saved language preference from storage so the page can start in the correct language.
 function rbGetLang() {
   return RBStorage.readLocal(RB_LANG_KEY, 'en') || 'en';
 }
 
+// Purpose: Applies the selected language to the page, updates the toggle button, and informs other modules.
 function rbApplyLang(lang) {
   const isFr = lang === 'fr';
   document.body.classList.toggle('lang-fr', isFr);
