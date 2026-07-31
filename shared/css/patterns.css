@@ -1,7 +1,5 @@
-/* ==========================================================================
-   RouteBack — Decorative patterns (route lines, stop dots, grid traces)
-   All patterns are aria-hidden / background-only and respect reduced motion.
-   ========================================================================== */
+/* RouteBack — Decorative patterns (route lines, stop dots, grid traces)
+   All patterns are aria-hidden / background-only and respect reduced motion. */
 
 .pattern-layer {
   position: absolute;

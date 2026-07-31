@@ -1,7 +1,7 @@
-/* ==========================================================================
+/* 
    RouteBack — Stylesheet entry point
    Load order matters: tokens → reset → layout → patterns → components → utils
-   ========================================================================== */
+   */
 
 @import url('variables.css?v=22');
 @import url('base.css?v=22');
